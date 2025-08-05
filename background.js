@@ -18,9 +18,21 @@ function broadcastState() {
   );
 }
 
-chrome.action.onClicked.addListener(() => {
-  chrome.storage.local.get('sidebarVisible', ({ sidebarVisible }) => {
-    chrome.storage.local.set({ sidebarVisible: !(sidebarVisible !== false) });
+chrome.action.onClicked.addListener((tab) => {
+  if (!tab.id) return;
+
+  const toggle = () => {
+    chrome.storage.local.get('sidebarVisible', ({ sidebarVisible }) => {
+      chrome.storage.local.set({ sidebarVisible: !(sidebarVisible !== false) });
+    });
+  };
+
+  chrome.tabs.sendMessage(tab.id, { type: 'ensure-sidebar' }, (response) => {
+    if (chrome.runtime.lastError || !response || !response.present) {
+      chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] }, toggle);
+    } else {
+      toggle();
+    }
   });
 });
 
