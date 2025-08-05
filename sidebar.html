@@ -26,10 +26,6 @@
   <button id="hide-sidebar-btn" title="Hide">×</button>
   <p>Omora Sidebar Ready</p>
 
-  <script>
-    document.getElementById('hide-sidebar-btn').addEventListener('click', () => {
-      parent.postMessage({ type: 'hide-sidebar' }, '*');
-    });
-  </script>
+  <script src="sidebar.js"></script>
 </body>
 </html>

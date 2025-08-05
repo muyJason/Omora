@@ -13,7 +13,7 @@
     ],
       "web_accessible_resources": [
       {
-        "resources": ["sidebar.html"],
+        "resources": ["sidebar.html", "sidebar.js"],
         "matches": ["<all_urls>"]
       }
     ],
