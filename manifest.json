@@ -11,7 +11,7 @@
         "run_at": "document_idle"
       }
     ],
-    "web_accessible_resources": [
+      "web_accessible_resources": [
       {
         "resources": ["sidebar.html"],
         "matches": ["<all_urls>"]
@@ -19,6 +19,9 @@
     ],
     "side_panel": {
       "default_path": "src/sidebar.html"
+    },
+    "background": {
+      "service_worker": "background.js"
     },
     "action": {
       "default_title": "Omora",
