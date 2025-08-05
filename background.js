@@ -44,9 +44,12 @@ chrome.commands.onCommand.addListener((command) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'hide-sidebar') {
     chrome.storage.local.set({ sidebarVisible: false });
+    sendResponse({ success: true });
+  } else if (message.type === 'TOGGLE_SIDEBAR') {
+    sendResponse({ success: true });
   }
 });
 

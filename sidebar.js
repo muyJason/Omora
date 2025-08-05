@@ -1,3 +1,5 @@
+let currentView = 'home';
+
 function applyTheme(theme) {
   const body = document.body;
   body.classList.remove('light-theme', 'dark-theme');
@@ -37,8 +39,6 @@ function showView(view) {
     contentArea.appendChild(homeDiv);
   }
 }
-
-let currentView = 'home';
 
 document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.local.get(

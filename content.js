@@ -8,38 +8,40 @@
   async function injectSidebar() {
     if (container || !document.body) return;
 
-    container = document.createElement('div');
-    container.id = SIDEBAR_ID;
-    Object.assign(container.style, {
-      position: 'fixed',
-      top: '0',
-      right: '0',
-      height: '100vh',
-      width: sidebarExpanded ? '250px' : '60px',
-      zIndex: '2147483647',
-      boxShadow: '0 0 8px rgba(0,0,0,0.15)',
-      background: 'white',
-    });
-
-    const shadow = container.attachShadow({ mode: 'open' });
     try {
       const res = await fetch(chrome.runtime.getURL('sidebar.html'));
       const html = await res.text();
-      const template = document.createElement('template');
-      template.innerHTML = html;
-      const link = template.content.querySelector('link[href="sidebar.css"]');
-      if (link) link.href = chrome.runtime.getURL('sidebar.css');
-      const scriptPlaceholder = template.content.querySelector('script[src="sidebar.js"]');
-      if (scriptPlaceholder) scriptPlaceholder.remove();
-      shadow.appendChild(template.content);
-      const script = document.createElement('script');
-      script.src = chrome.runtime.getURL('sidebar.js');
-      shadow.appendChild(script);
+
+      container = document.createElement('div');
+      container.id = SIDEBAR_ID;
+      Object.assign(container.style, {
+        position: 'fixed',
+        top: '0',
+        right: '0',
+        height: '100vh',
+        width: sidebarExpanded ? '250px' : '60px',
+        zIndex: '2147483647',
+        boxShadow: '0 0 8px rgba(0,0,0,0.15)',
+        background: 'white',
+      });
+
+      if (typeof html === 'string') {
+        container.innerHTML = html;
+        const link = container.querySelector('link[href="sidebar.css"]');
+        if (link) link.href = chrome.runtime.getURL('sidebar.css');
+        const scriptPlaceholder = container.querySelector('script[src="sidebar.js"]');
+        if (scriptPlaceholder) {
+          scriptPlaceholder.remove();
+          const script = document.createElement('script');
+          script.src = chrome.runtime.getURL('sidebar.js');
+          container.appendChild(script);
+        }
+
+        document.body.appendChild(container);
+      }
     } catch (e) {
       console.error('Failed to inject sidebar:', e);
     }
-
-    document.body.appendChild(container);
   }
 
   function removeSidebar() {
