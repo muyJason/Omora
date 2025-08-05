@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Omora",
+    "version": "0.1",
+    "description": "A quiet, elegant browser sidebar for bookmarks, tasks & maybe AI.",
+    "permissions": ["sidePanel"],
+    "side_panel": {
+      "default_path": "src/sidebar.html"
+    },
+    "action": {
+      "default_title": "Omora",
+      "default_icon": {
+        "16": "public/icon.ico",
+        "32": "public/icon.ico"
+      }
+    },
+    "icons": {
+      "128": "public/icon.png"
+    }
+  }
+  
