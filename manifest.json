@@ -26,8 +26,8 @@
     "action": {
       "default_title": "Omora",
       "default_icon": {
-        "16": "public/icon.ico",
-        "32": "public/icon.ico"
+        "16": "public/icon16.png",
+        "32": "public/icon32.png"
       }
     },
     "commands": {
@@ -39,7 +39,9 @@
       }
     },
     "icons": {
-      "128": "public/icon.png"
+      "16": "public/icon16.png",
+      "32": "public/icon32.png",
+      "128": "public/icon128.png"
     }
   }
   
