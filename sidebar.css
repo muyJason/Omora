@@ -21,9 +21,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f1f1f1;
   border: none;
-  border-top: 1px solid #ccc;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
@@ -31,4 +29,34 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.light-theme {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.light-theme #settings-btn {
+  background-color: #f1f1f1;
+  border-top: 1px solid #ccc;
+  color: #000000;
+}
+
+.light-theme #hide-sidebar-btn {
+  color: #000000;
+}
+
+.dark-theme {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+}
+
+.dark-theme #settings-btn {
+  background-color: #333333;
+  border-top: 1px solid #555555;
+  color: #f1f1f1;
+}
+
+.dark-theme #hide-sidebar-btn {
+  color: #f1f1f1;
 }
