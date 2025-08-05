@@ -1,6 +1,7 @@
 (() => {
   let sidebar = document.getElementById('omora-sidebar');
   let sidebarVisible = true;
+  let toggleButton = document.getElementById('omora-toggle-button');
 
   if (!sidebar) {
     sidebar = document.createElement('iframe');
@@ -25,19 +26,49 @@
     sidebar.style.display = 'block';
     document.body.style.marginRight = '400px';
     sidebarVisible = true;
+    toggleButton.style.display = 'none';
   };
 
   const hideSidebar = () => {
     sidebar.style.display = 'none';
     document.body.style.marginRight = '0px';
     sidebarVisible = false;
+    toggleButton.style.display = 'block';
   };
 
   const toggleSidebar = () => {
     sidebarVisible ? hideSidebar() : showSidebar();
   };
 
+  if (!toggleButton) {
+    toggleButton = document.createElement('button');
+    toggleButton.id = 'omora-toggle-button';
+    toggleButton.textContent = 'Omora';
+    Object.assign(toggleButton.style, {
+      position: 'fixed',
+      top: '50%',
+      right: '0',
+      transform: 'translateY(-50%)',
+      zIndex: '2147483647',
+      display: 'none',
+      padding: '8px 4px',
+      cursor: 'pointer',
+      background: '#fff',
+      border: '1px solid #ccc',
+      borderRight: 'none',
+      borderRadius: '4px 0 0 4px'
+    });
+    toggleButton.addEventListener('click', showSidebar);
+    document.body.appendChild(toggleButton);
+  }
+
   showSidebar();
+
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'hide-sidebar') {
+      hideSidebar();
+    }
+  });
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.type === 'toggle-sidebar') {
