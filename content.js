@@ -1,4 +1,16 @@
-(() => {
+// Content script for injecting and managing the Omora sidebar.
+(async () => {
+  const storageKey = `sidebarVisible:${location.hostname}`;
+
+  const getVisibility = async () => {
+    const result = await chrome.storage.local.get(storageKey);
+    return result[storageKey];
+  };
+
+  const setVisibility = async (visible) => {
+    await chrome.storage.local.set({ [storageKey]: visible });
+  };
+
   let sidebar = document.getElementById('omora-sidebar');
   let sidebarVisible = true;
   let toggleButton = document.getElementById('omora-toggle-button');
@@ -22,18 +34,20 @@
     document.body.appendChild(sidebar);
   }
 
-  const showSidebar = () => {
+  const showSidebar = async () => {
     sidebar.style.display = 'block';
     document.body.style.marginRight = '400px';
     sidebarVisible = true;
     toggleButton.style.display = 'none';
+    await setVisibility(true);
   };
 
-  const hideSidebar = () => {
+  const hideSidebar = async () => {
     sidebar.style.display = 'none';
     document.body.style.marginRight = '0px';
     sidebarVisible = false;
     toggleButton.style.display = 'block';
+    await setVisibility(false);
   };
 
   const toggleSidebar = () => {
@@ -62,7 +76,12 @@
     document.body.appendChild(toggleButton);
   }
 
-  showSidebar();
+  const storedVisibility = await getVisibility();
+  if (storedVisibility === false) {
+    await hideSidebar();
+  } else {
+    await showSidebar();
+  }
 
   window.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'hide-sidebar') {
