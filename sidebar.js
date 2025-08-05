@@ -14,12 +14,37 @@ function applyExpanded(expanded) {
   }
 }
 
+function showView(view) {
+  const contentArea = document.getElementById('content-area');
+  if (!contentArea) return;
+
+  currentView = view;
+  chrome.storage.local.set({ sidebarView: view });
+
+  contentArea.innerHTML = '';
+  if (view === 'settings') {
+    const iframe = document.createElement('iframe');
+    iframe.src = 'settings.html';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    contentArea.appendChild(iframe);
+  } else {
+    const homeDiv = document.createElement('div');
+    homeDiv.innerHTML = '<p>Omora Sidebar Ready</p>';
+    contentArea.appendChild(homeDiv);
+  }
+}
+
+let currentView = 'home';
+
 document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.local.get(
-    ['sidebarTheme', 'sidebarExpanded'],
-    ({ sidebarTheme, sidebarExpanded }) => {
+    ['sidebarTheme', 'sidebarExpanded', 'sidebarView'],
+    ({ sidebarTheme, sidebarExpanded, sidebarView }) => {
       applyTheme(sidebarTheme || 'light');
       applyExpanded(sidebarExpanded === true);
+      showView(sidebarView === 'settings' ? 'settings' : 'home');
     },
   );
 
@@ -30,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (changes.sidebarExpanded) {
         applyExpanded(changes.sidebarExpanded.newValue === true);
+      }
+      if (changes.sidebarView) {
+        showView(changes.sidebarView.newValue === 'settings' ? 'settings' : 'home');
       }
     }
   });
@@ -58,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsButton = document.getElementById('settings-btn');
   if (settingsButton) {
     settingsButton.addEventListener('click', () => {
-      chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
+      showView(currentView === 'settings' ? 'home' : 'settings');
     });
   }
 });
