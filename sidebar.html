@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Omora Sidebar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 16px;
+      position: relative;
+    }
+
+    #hide-sidebar-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="hide-sidebar-btn" title="Hide">×</button>
+  <p>Omora Sidebar Ready</p>
+
+  <script>
+    document.getElementById('hide-sidebar-btn').addEventListener('click', () => {
+      parent.postMessage({ type: 'hide-sidebar' }, '*');
+    });
+  </script>
+</body>
+</html>
