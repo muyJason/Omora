@@ -1,47 +1,39 @@
 {
-    "manifest_version": 3,
-    "name": "Omora",
-    "version": "0.1",
-    "description": "A quiet, elegant browser sidebar for bookmarks, tasks & maybe AI.",
-    "permissions": ["sidePanel", "storage"],
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
-      }
-    ],
-      "web_accessible_resources": [
-      {
-        "resources": ["sidebar.html", "sidebar.js"],
-        "matches": ["<all_urls>"]
-      }
-    ],
-    "side_panel": {
-      "default_path": "src/sidebar.html"
-    },
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_title": "Omora",
-      "default_icon": {
-        "16": "public/icon16.png",
-        "32": "public/icon32.png"
-      }
-    },
-    "commands": {
-      "toggle-sidebar": {
-        "suggested_key": {
-          "default": "Ctrl+Shift+O"
-        },
-        "description": "Toggle the Omora sidebar"
-      }
-    },
-    "icons": {
+  "manifest_version": 3,
+  "name": "Omora",
+  "version": "1.0",
+  "description": "Persistent sidebar with toggle support",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Toggle Omora Sidebar",
+    "default_icon": {
       "16": "public/icon16.png",
       "32": "public/icon32.png",
       "128": "public/icon128.png"
     }
+  },
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["sidebar.html", "sidebar.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "toggle-sidebar": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O"
+      },
+      "description": "Toggle the Omora sidebar"
+    }
+  },
+  "icons": {
+    "16": "public/icon16.png",
+    "32": "public/icon32.png",
+    "128": "public/icon128.png"
   }
-  
+}
+

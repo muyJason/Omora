@@ -1,6 +1,9 @@
 chrome.action.onClicked.addListener((tab) => {
   if (tab.id !== undefined) {
-    chrome.tabs.sendMessage(tab.id, { type: 'toggle-sidebar' });
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['content.js'],
+    });
   }
 });
 
@@ -9,10 +12,9 @@ chrome.commands.onCommand.addListener((command) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (activeTab?.id !== undefined) {
-        chrome.tabs.sendMessage(activeTab.id, { type: 'toggle-sidebar' }, () => {
-          if (chrome.runtime.lastError) {
-            // No matching content script; ignore.
-          }
+        chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          files: ['content.js'],
         });
       }
     });
