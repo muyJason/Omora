@@ -23,12 +23,14 @@ function showView(view) {
 
   contentArea.innerHTML = '';
   if (view === 'settings') {
-    const iframe = document.createElement('iframe');
-    iframe.src = 'settings.html';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = 'none';
-    contentArea.appendChild(iframe);
+    fetch(chrome.runtime.getURL('settings.html'))
+      .then((response) => response.text())
+      .then((html) => {
+        contentArea.innerHTML = html;
+        const script = document.createElement('script');
+        script.src = chrome.runtime.getURL('settings.js');
+        contentArea.appendChild(script);
+      });
   } else {
     const homeDiv = document.createElement('div');
     homeDiv.innerHTML = '<p>Omora Sidebar Ready</p>';
