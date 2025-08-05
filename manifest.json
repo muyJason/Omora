@@ -3,7 +3,7 @@
     "name": "Omora",
     "version": "0.1",
     "description": "A quiet, elegant browser sidebar for bookmarks, tasks & maybe AI.",
-    "permissions": ["sidePanel"],
+    "permissions": ["sidePanel", "storage"],
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
