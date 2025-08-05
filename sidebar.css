@@ -101,3 +101,13 @@ body {
 .dark-theme #hide-sidebar-btn {
   color: #f1f1f1;
 }
+
+/* Hide scrollbar while keeping scroll active */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
