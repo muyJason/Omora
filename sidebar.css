@@ -1,9 +1,22 @@
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 16px;
   position: relative;
   padding-bottom: 60px; /* space for settings button */
+}
+
+.collapsed {
+  width: 60px;
+}
+
+.expanded {
+  width: 250px;
 }
 
 #hide-sidebar-btn {
@@ -14,6 +27,26 @@ body {
   border: none;
   font-size: 16px;
   cursor: pointer;
+}
+
+#toggle-expand-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#content-area {
+  height: 100%;
+}
+
+#content-area iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 #settings-btn {
@@ -29,6 +62,14 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.collapsed #settings-btn .label {
+  display: none;
+}
+
+.collapsed #settings-btn {
+  justify-content: center;
 }
 
 .light-theme {
