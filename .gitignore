@@ -1,1 +1,4 @@
-.DS_Store\nnode_modules/\ndist/
+.DS_Store
+node_modules/
+dist/
+
