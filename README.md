@@ -25,5 +25,5 @@ Minimal Chrome extension.
   operating system dark mode preference, and finally the page's
   background brightness. A default dark background is used when dark
   mode is active.
-- Sidebar text automatically switches to white in dark mode and black in light mode.
+- All sidebar text and the chevron icon switch to white in dark mode and to black in light mode.
 - Scrollbars inside the sidebar are hidden for a cleaner appearance.
