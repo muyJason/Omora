@@ -10,12 +10,18 @@
   border-left: 1px solid #ccc;
   z-index: 2147483647;
   overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   min-width: 50px;
   max-width: 80vw;
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
   transition: width 0.5s;
+}
+
+#omora-sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 #omora-sidebar.omora-theme-dark {
@@ -76,6 +82,10 @@
 #omora-sidebar.collapsed .buttons-container,
 #omora-sidebar.collapsed .bottom-buttons {
   margin-left: 0;
+}
+
+#omora-sidebar button {
+  color: inherit;
 }
 
 #omora-sidebar .omora-button {
