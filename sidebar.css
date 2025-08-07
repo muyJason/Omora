@@ -28,15 +28,8 @@
 }
 
 #omora-sidebar .expand-toggle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  border: none;
-  background: none;
-  width: 100%;
-  cursor: pointer;
   margin-left: 5px;
+  justify-content: flex-start;
 }
 
 #omora-sidebar .expand-toggle .icon {
@@ -45,12 +38,36 @@
   transform: rotate(180deg);
 }
 
+#omora-sidebar.collapsed .expand-toggle {
+  margin-left: 0;
+}
+
 #omora-sidebar.collapsed .expand-toggle .icon {
   transform: rotate(0deg);
 }
 
+#omora-sidebar .expand-toggle .label {
+}
+
+#omora-sidebar.collapsed .expand-toggle .label {
+  display: none;
+}
+
 #omora-sidebar .buttons-container {
   margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#omora-sidebar .bottom-buttons {
+  margin-left: 5px;
+  margin-top: auto;
+}
+
+#omora-sidebar.collapsed .buttons-container,
+#omora-sidebar.collapsed .bottom-buttons {
+  margin-left: 0;
 }
 
 #omora-sidebar .omora-button {
@@ -63,6 +80,11 @@
   width: 100%;
   text-align: left;
   cursor: pointer;
+}
+
+#omora-sidebar.collapsed .omora-button,
+#omora-sidebar.collapsed .expand-toggle {
+  justify-content: center;
 }
 
 #omora-sidebar.collapsed .omora-button .label {

@@ -13,7 +13,10 @@ Minimal Chrome extension.
   the sidebar exceeds 100px and collapse to icons only when narrower.
   New buttons can be added at runtime via `window.omoraAddButton`.
 - Expand/Collapse toggle button at the top. It animates the sidebar
-  width between 50px and 200px over 0.5s and rotates its chevron icon
-  180° to indicate the state.
+  width between 50px and 200px over 0.5s, shows a "Collaps" label when
+  expanded, and rotates its chevron icon 180° to indicate the state.
+- Icons (including the chevron) center themselves when the sidebar is
+  collapsed so the toggle aligns with other buttons.
+- A persistent Settings button is anchored to the bottom of the sidebar.
 - Styling for the sidebar lives in a dedicated `sidebar.css` file for
   easier customization.

@@ -9,6 +9,7 @@
     let observer;
     let handle;
     let buttonsContainer;
+    let bottomButtonsContainer;
     let isResizing = false;
     let startResize;
     let onMouseMove;
@@ -26,6 +27,7 @@
     };
 
     const buttonConfigs = [];
+    const bottomButtonConfigs = [];
 
     const createButton = ({ icon, label, onClick }) => {
       const btn = document.createElement('button');
@@ -44,9 +46,11 @@
     };
 
     const addButton = (config) => {
-      buttonConfigs.push(config);
-      if (buttonsContainer) {
-        buttonsContainer.appendChild(createButton(config));
+      const list = config.position === 'bottom' ? bottomButtonConfigs : buttonConfigs;
+      list.push(config);
+      const container = config.position === 'bottom' ? bottomButtonsContainer : buttonsContainer;
+      if (container) {
+        container.appendChild(createButton(config));
         updateSidebarState();
       }
     };
@@ -54,7 +58,7 @@
     window.omoraAddButton = addButton;
 
     addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
-    addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked') });
+    addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
     const adjustBody = () => {
       if (sidebar) {
@@ -74,12 +78,8 @@
         handle.className = 'resize-handle';
         sidebar.appendChild(handle);
 
-        const toggleButton = document.createElement('button');
-        toggleButton.className = 'expand-toggle';
-        const chevron = document.createElement('span');
-        chevron.className = 'icon';
-        chevron.textContent = '\u276F';
-        toggleButton.appendChild(chevron);
+        const toggleButton = createButton({ icon: '\u276F', label: 'Collaps' });
+        toggleButton.classList.add('expand-toggle');
         toggleButton.addEventListener('click', () => {
           const targetWidth = sidebar.offsetWidth > 100 ? 50 : 200;
           sidebar.style.width = `${targetWidth}px`;
@@ -95,8 +95,16 @@
         buttonsContainer.className = 'buttons-container';
         sidebar.appendChild(buttonsContainer);
 
+        bottomButtonsContainer = document.createElement('div');
+        bottomButtonsContainer.className = 'bottom-buttons';
+        sidebar.appendChild(bottomButtonsContainer);
+
         buttonConfigs.forEach((cfg) => {
           buttonsContainer.appendChild(createButton(cfg));
+        });
+
+        bottomButtonConfigs.forEach((cfg) => {
+          bottomButtonsContainer.appendChild(createButton(cfg));
         });
 
         onMouseMove = (e) => {
@@ -146,6 +154,7 @@
         sidebar.remove();
         sidebar = undefined;
         buttonsContainer = undefined;
+        bottomButtonsContainer = undefined;
       }
       adjustBody();
     };
