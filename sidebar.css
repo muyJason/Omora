@@ -1,0 +1,71 @@
+/* Sidebar styles for the Omora extension */
+
+#omora-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  z-index: 2147483647;
+  overflow: auto;
+  min-width: 50px;
+  max-width: 80vw;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  transition: width 0.5s;
+}
+
+#omora-sidebar .resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+#omora-sidebar .expand-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  border: none;
+  background: none;
+  width: 100%;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+#omora-sidebar .expand-toggle .icon {
+  display: inline-block;
+  transition: transform 0.5s;
+  transform: rotate(180deg);
+}
+
+#omora-sidebar.collapsed .expand-toggle .icon {
+  transform: rotate(0deg);
+}
+
+#omora-sidebar .buttons-container {
+  margin-left: 5px;
+}
+
+#omora-sidebar .omora-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+#omora-sidebar.collapsed .omora-button .label {
+  display: none;
+}
+
