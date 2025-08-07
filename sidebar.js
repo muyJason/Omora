@@ -8,14 +8,86 @@
     let sidebar;
     let observer;
     let handle;
+    let buttonsContainer;
     let isResizing = false;
     let startResize;
     let onMouseMove;
     let stopResize;
 
+    const existingStyle = document.getElementById('omora-sidebar-style');
+    if (!existingStyle) {
+      const style = document.createElement('style');
+      style.id = 'omora-sidebar-style';
+      style.textContent = `
+        #omora-sidebar {
+          display: flex;
+          flex-direction: column;
+          font-family: sans-serif;
+        }
+        #omora-sidebar .omora-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px;
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+          cursor: pointer;
+        }
+        #omora-sidebar.collapsed .omora-button .label {
+          display: none;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const updateSidebarState = () => {
+      if (!sidebar) {
+        return;
+      }
+      if (sidebar.offsetWidth <= 100) {
+        sidebar.classList.add('collapsed');
+      } else {
+        sidebar.classList.remove('collapsed');
+      }
+    };
+
+    const buttonConfigs = [];
+
+    const createButton = ({ icon, label, onClick }) => {
+      const btn = document.createElement('button');
+      btn.className = 'omora-button';
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'icon';
+      iconSpan.textContent = icon;
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'label';
+      labelSpan.textContent = label;
+      btn.append(iconSpan, labelSpan);
+      if (onClick) {
+        btn.addEventListener('click', onClick);
+      }
+      return btn;
+    };
+
+    const addButton = (config) => {
+      buttonConfigs.push(config);
+      if (buttonsContainer) {
+        buttonsContainer.appendChild(createButton(config));
+        updateSidebarState();
+      }
+    };
+
+    window.omoraAddButton = addButton;
+
+    addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
+    addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked') });
+
     const adjustBody = () => {
       if (sidebar) {
         body.style.marginRight = `${sidebar.offsetWidth}px`;
+        updateSidebarState();
       } else {
         body.style.marginRight = '';
       }
@@ -49,6 +121,14 @@
         });
         sidebar.appendChild(handle);
 
+        buttonsContainer = document.createElement('div');
+        buttonsContainer.style.marginLeft = '5px';
+        sidebar.appendChild(buttonsContainer);
+
+        buttonConfigs.forEach((cfg) => {
+          buttonsContainer.appendChild(createButton(cfg));
+        });
+
         onMouseMove = (e) => {
           if (!isResizing) {
             return;
@@ -76,7 +156,7 @@
         };
 
         handle.addEventListener('mousedown', startResize);
-
+        
         body.appendChild(sidebar);
         observer = new ResizeObserver(adjustBody);
         observer.observe(sidebar);
@@ -93,6 +173,7 @@
         handle.removeEventListener('mousedown', startResize);
         sidebar.remove();
         sidebar = undefined;
+        buttonsContainer = undefined;
       }
       adjustBody();
     };
