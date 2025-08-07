@@ -14,53 +14,6 @@
     let onMouseMove;
     let stopResize;
 
-    const existingStyle = document.getElementById('omora-sidebar-style');
-    if (!existingStyle) {
-      const style = document.createElement('style');
-      style.id = 'omora-sidebar-style';
-      style.textContent = `
-        #omora-sidebar {
-          display: flex;
-          flex-direction: column;
-          font-family: sans-serif;
-          transition: width 0.5s;
-        }
-        #omora-sidebar .omora-button {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px;
-          border: none;
-          background: none;
-          width: 100%;
-          text-align: left;
-          cursor: pointer;
-        }
-        #omora-sidebar.collapsed .omora-button .label {
-          display: none;
-        }
-        #omora-sidebar .expand-toggle {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 8px;
-          border: none;
-          background: none;
-          width: 100%;
-          cursor: pointer;
-        }
-        #omora-sidebar .expand-toggle .icon {
-          display: inline-block;
-          transition: transform 0.5s;
-          transform: rotate(180deg);
-        }
-        #omora-sidebar.collapsed .expand-toggle .icon {
-          transform: rotate(0deg);
-        }
-      `;
-      document.head.appendChild(style);
-    }
-
     const updateSidebarState = () => {
       if (!sidebar) {
         return;
@@ -116,33 +69,13 @@
       if (!sidebar) {
         sidebar = document.createElement('div');
         sidebar.id = 'omora-sidebar';
-        Object.assign(sidebar.style, {
-          position: 'fixed',
-          top: '0',
-          right: '0',
-          width: '300px',
-          height: '100vh',
-          backgroundColor: '#fff',
-          borderLeft: '1px solid #ccc',
-          zIndex: '2147483647',
-          overflow: 'auto',
-          minWidth: '50px',
-          maxWidth: '80vw'
-        });
+
         handle = document.createElement('div');
-        Object.assign(handle.style, {
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: '5px',
-          height: '100%',
-          cursor: 'ew-resize'
-        });
+        handle.className = 'resize-handle';
         sidebar.appendChild(handle);
 
         const toggleButton = document.createElement('button');
         toggleButton.className = 'expand-toggle';
-        toggleButton.style.marginLeft = '5px';
         const chevron = document.createElement('span');
         chevron.className = 'icon';
         chevron.textContent = '\u276F';
@@ -159,7 +92,7 @@
         sidebar.appendChild(toggleButton);
 
         buttonsContainer = document.createElement('div');
-        buttonsContainer.style.marginLeft = '5px';
+        buttonsContainer.className = 'buttons-container';
         sidebar.appendChild(buttonsContainer);
 
         buttonConfigs.forEach((cfg) => {

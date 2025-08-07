@@ -15,3 +15,5 @@ Minimal Chrome extension.
 - Expand/Collapse toggle button at the top. It animates the sidebar
   width between 50px and 200px over 0.5s and rotates its chevron icon
   180° to indicate the state.
+- Styling for the sidebar lives in a dedicated `sidebar.css` file for
+  easier customization.
