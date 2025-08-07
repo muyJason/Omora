@@ -18,6 +18,14 @@
   transition: width 0.5s;
 }
 
+#omora-sidebar.omora-theme-dark {
+  color: #fff;
+}
+
+#omora-sidebar.omora-theme-light {
+  color: #000;
+}
+
 #omora-sidebar .resize-handle {
   position: absolute;
   top: 0;

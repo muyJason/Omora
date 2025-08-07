@@ -14,6 +14,9 @@
     let startResize;
     let onMouseMove;
     let stopResize;
+    let detectedBg;
+    let themeClass;
+    let themeComputed = false;
 
     const updateSidebarState = () => {
       if (!sidebar) {
@@ -60,6 +63,31 @@
     addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
+    const detectTheme = () => {
+      if (themeComputed) {
+        return;
+      }
+      themeComputed = true;
+      let bg = getComputedStyle(body).backgroundColor;
+      if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') {
+        bg = getComputedStyle(document.documentElement).backgroundColor;
+      }
+      detectedBg = bg;
+      const force = window.omoraForceTheme;
+      if (force === 'light' || force === 'dark') {
+        themeClass = force === 'light' ? 'omora-theme-light' : 'omora-theme-dark';
+        return;
+      }
+      const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (match) {
+        const r = parseInt(match[1], 10);
+        const g = parseInt(match[2], 10);
+        const b = parseInt(match[3], 10);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        themeClass = brightness < 128 ? 'omora-theme-light' : 'omora-theme-dark';
+      }
+    };
+
     const adjustBody = () => {
       if (sidebar) {
         body.style.marginRight = `${sidebar.offsetWidth}px`;
@@ -71,8 +99,15 @@
 
     const showSidebar = () => {
       if (!sidebar) {
+        detectTheme();
         sidebar = document.createElement('div');
         sidebar.id = 'omora-sidebar';
+        if (detectedBg) {
+          sidebar.style.backgroundColor = detectedBg;
+        }
+        if (themeClass) {
+          sidebar.classList.add(themeClass);
+        }
 
         handle = document.createElement('div');
         handle.className = 'resize-handle';
