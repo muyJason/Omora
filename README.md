@@ -9,3 +9,6 @@ Minimal Chrome extension.
   is synchronized across all tabs and windows.
 - The sidebar defaults to roughly 300px wide, shrinks page content to
   accommodate its width, and stays hidden on restricted pages.
+- Scaffold for sidebar buttons. Buttons show their icon and label when
+  the sidebar exceeds 100px and collapse to icons only when narrower.
+  New buttons can be added at runtime via `window.omoraAddButton`.
