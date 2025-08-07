@@ -24,8 +24,10 @@
   display: none;
 }
 
-#omora-sidebar.omora-theme-dark {
-  color: #fff;
+#omora-sidebar.omora-theme-dark,
+#omora-sidebar.omora-theme-dark * {
+  color: #fff !important;
+  fill: #fff !important;
 }
 
 #omora-sidebar.omora-theme-light {
