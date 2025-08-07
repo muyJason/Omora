@@ -68,23 +68,35 @@
         return;
       }
       themeComputed = true;
+      const force = window.omoraForceTheme;
+      if (force === 'light' || force === 'dark') {
+        themeClass = force === 'light' ? 'omora-theme-light' : 'omora-theme-dark';
+        if (themeClass === 'omora-theme-dark') {
+          detectedBg = '#1e1e1e';
+        }
+        return;
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        themeClass = 'omora-theme-dark';
+        detectedBg = '#1e1e1e';
+        return;
+      }
       let bg = getComputedStyle(body).backgroundColor;
       if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') {
         bg = getComputedStyle(document.documentElement).backgroundColor;
       }
       detectedBg = bg;
-      const force = window.omoraForceTheme;
-      if (force === 'light' || force === 'dark') {
-        themeClass = force === 'light' ? 'omora-theme-light' : 'omora-theme-dark';
-        return;
-      }
-      const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      const match = bg && bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
       if (match) {
         const r = parseInt(match[1], 10);
         const g = parseInt(match[2], 10);
         const b = parseInt(match[3], 10);
         const brightness = (r * 299 + g * 587 + b * 114) / 1000;
         themeClass = brightness < 128 ? 'omora-theme-light' : 'omora-theme-dark';
+      }
+      if (themeClass === 'omora-theme-dark' && (!detectedBg || detectedBg === 'transparent' || detectedBg === 'rgba(0, 0, 0, 0)')) {
+        detectedBg = '#1e1e1e';
       }
     };
 

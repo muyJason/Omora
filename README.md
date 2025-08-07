@@ -20,6 +20,8 @@ Minimal Chrome extension.
 - A persistent Settings button is anchored to the bottom of the sidebar.
 - Styling for the sidebar lives in a dedicated `sidebar.css` file for
   easier customization.
-- Automatically matches the page's background color and switches between
-  light and dark sidebar themes. The theme can be overridden before
-  initialization via `window.omoraForceTheme`.
+- Automatically selects a light or dark sidebar theme with the following
+  priority: a global `window.omoraForceTheme` override, the user's
+  operating system dark mode preference, and finally the page's
+  background brightness. A default dark background is used when dark
+  mode is active.
