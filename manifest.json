@@ -8,6 +8,10 @@
     "32": "public/icon32.png",
     "128": "public/icon128.png"
   },
+  "permissions": ["storage", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
