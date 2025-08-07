@@ -25,9 +25,14 @@
 }
 
 #omora-sidebar.omora-theme-dark,
-#omora-sidebar.omora-theme-dark * {
+#omora-sidebar.omora-theme-dark *,
+#omora-sidebar.omora-theme-dark::before,
+#omora-sidebar.omora-theme-dark::after,
+#omora-sidebar.omora-theme-dark *::before,
+#omora-sidebar.omora-theme-dark *::after {
   color: #fff !important;
   fill: #fff !important;
+  stroke: #fff !important;
 }
 
 #omora-sidebar.omora-theme-light {
