@@ -23,6 +23,7 @@
           display: flex;
           flex-direction: column;
           font-family: sans-serif;
+          transition: width 0.5s;
         }
         #omora-sidebar .omora-button {
           display: flex;
@@ -37,6 +38,24 @@
         }
         #omora-sidebar.collapsed .omora-button .label {
           display: none;
+        }
+        #omora-sidebar .expand-toggle {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 8px;
+          border: none;
+          background: none;
+          width: 100%;
+          cursor: pointer;
+        }
+        #omora-sidebar .expand-toggle .icon {
+          display: inline-block;
+          transition: transform 0.5s;
+          transform: rotate(180deg);
+        }
+        #omora-sidebar.collapsed .expand-toggle .icon {
+          transform: rotate(0deg);
         }
       `;
       document.head.appendChild(style);
@@ -121,6 +140,24 @@
         });
         sidebar.appendChild(handle);
 
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'expand-toggle';
+        toggleButton.style.marginLeft = '5px';
+        const chevron = document.createElement('span');
+        chevron.className = 'icon';
+        chevron.textContent = '\u276F';
+        toggleButton.appendChild(chevron);
+        toggleButton.addEventListener('click', () => {
+          const targetWidth = sidebar.offsetWidth > 100 ? 50 : 200;
+          sidebar.style.width = `${targetWidth}px`;
+          if (targetWidth <= 100) {
+            sidebar.classList.add('collapsed');
+          } else {
+            sidebar.classList.remove('collapsed');
+          }
+        });
+        sidebar.appendChild(toggleButton);
+
         buttonsContainer = document.createElement('div');
         buttonsContainer.style.marginLeft = '5px';
         sidebar.appendChild(buttonsContainer);
@@ -145,10 +182,12 @@
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', stopResize);
           body.style.userSelect = '';
+          sidebar.style.transition = '';
         };
 
         startResize = (e) => {
           isResizing = true;
+          sidebar.style.transition = 'none';
           document.addEventListener('mousemove', onMouseMove);
           document.addEventListener('mouseup', stopResize);
           body.style.userSelect = 'none';
@@ -156,7 +195,7 @@
         };
 
         handle.addEventListener('mousedown', startResize);
-        
+
         body.appendChild(sidebar);
         observer = new ResizeObserver(adjustBody);
         observer.observe(sidebar);
