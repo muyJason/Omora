@@ -8,6 +8,13 @@
     "32": "public/icon32.png",
     "128": "public/icon128.png"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["sidebar.js"],
+      "run_at": "document_end"
+    }
+  ],
   "action": {
     "default_title": "Omora",
     "default_icon": {
