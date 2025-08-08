@@ -18,6 +18,11 @@
       "css": ["sidebar.css"],
       "js": ["sidebar.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["appearanceInjector.js"],
+      "run_at": "document_end"
     }
   ],
   "action": {

@@ -33,3 +33,6 @@ Minimal Chrome extension.
 - Scrollbars inside the sidebar are hidden for a cleaner appearance.
 - "Appearance" settings tab lets you set a custom background image or chat
   bubble color with live preview and localStorage persistence.
+- Saved appearance settings are automatically injected into ChatGPT pages
+  (https://chat.openai.com/*), applying background and user chat bubble colors
+  in real time.
