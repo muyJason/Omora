@@ -14,7 +14,7 @@
   width: 0;
   overflow: auto;
   background: var(--omora-panel-bg);
-  transition: width 0.3s ease;
+  transition: width 0.2s ease;
   position: relative;
 }
 
@@ -86,4 +86,78 @@
 #omora-sidebar {
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+#omora-sidebar .color-picker {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#omora-sidebar .color-picker .cp-sv {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  background: hsl(0, 100%, 50%);
+  background-image: linear-gradient(to top, black, transparent), linear-gradient(to right, white, transparent);
+  cursor: crosshair;
+}
+
+#omora-sidebar .color-picker .cp-cursor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: translate(-5px, -5px);
+}
+
+#omora-sidebar .color-picker .cp-hue {
+  width: 100%;
+  appearance: none;
+  height: 12px;
+  background: linear-gradient(to right, red, yellow, lime, aqua, blue, magenta, red);
+  cursor: pointer;
+}
+
+#omora-sidebar .color-picker .cp-preview {
+  width: 40px;
+  height: 40px;
+  border: 1px solid;
+}
+
+#omora-sidebar .color-picker .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#omora-sidebar .color-picker input[type="text"] {
+  flex: 1;
+  padding: 4px;
+  border: 1px solid;
+  background: transparent;
+  color: inherit;
+}
+
+#omora-sidebar .color-picker button {
+  padding: 4px;
+  border: 1px solid;
+  background: var(--omora-bg);
+  color: inherit;
+  cursor: pointer;
+}
+
+.omora-theme-dark #omora-sidebar .color-picker input[type="text"],
+.omora-theme-dark #omora-sidebar .color-picker button,
+.omora-theme-dark #omora-sidebar .color-picker .cp-preview {
+  border-color: #555;
+}
+
+.omora-theme-light #omora-sidebar .color-picker input[type="text"],
+.omora-theme-light #omora-sidebar .color-picker button,
+.omora-theme-light #omora-sidebar .color-picker .cp-preview {
+  border-color: #ccc;
 }
