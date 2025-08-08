@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Omora Settings - Appearance</title>
+  <link rel="stylesheet" href="settingsAppearance.css" />
+</head>
+<body>
+  <nav class="settings-nav">
+    <button class="tab active">Appearance</button>
+  </nav>
+  <main>
+    <section class="section">
+      <h2>Background</h2>
+      <div class="radio-group">
+        <label><input type="radio" name="background" value="none" /> None</label>
+        <label><input type="radio" name="background" value="default" /> Default</label>
+        <label><input type="radio" name="background" value="custom" /> Custom</label>
+      </div>
+      <div id="custom-bg" class="hidden">
+        <input type="file" id="bg-file" accept="image/*" />
+      </div>
+      <div id="background-preview" class="preview"></div>
+    </section>
+
+    <section class="section">
+      <h2>Chatbubble Color</h2>
+      <div class="color-grid">
+        <button class="color-option" data-color="#4CAF50" style="background-color:#4CAF50;"></button>
+        <button class="color-option" data-color="#2196F3" style="background-color:#2196F3;"></button>
+        <button class="color-option" data-color="#FFC107" style="background-color:#FFC107;"></button>
+        <button class="color-option" data-color="#E91E63" style="background-color:#E91E63;"></button>
+        <button class="color-option" data-color="#9C27B0" style="background-color:#9C27B0;"></button>
+        <button class="color-option" data-color="#FF5722" style="background-color:#FF5722;"></button>
+        <button class="color-option" data-color="#795548" style="background-color:#795548;"></button>
+        <button class="color-option" data-color="#607D8B" style="background-color:#607D8B;"></button>
+      </div>
+    </section>
+  </main>
+  <script src="settingsAppearance.js"></script>
+</body>
+</html>
