@@ -36,5 +36,6 @@ Minimal Chrome extension.
 - Saved appearance settings are automatically injected into ChatGPT pages
   (https://chat.openai.com/*), applying background and user chat bubble colors
   in real time.
-- The sidebar detects the active tab's domain and shows a "Website-Specific" button
-  for supported sites, opening a feature panel tailored to that domain.
+- The sidebar detects the current page's domain without relying on the
+  `chrome.tabs` API and shows a "Website-Specific" button for supported
+  sites, opening a feature panel tailored to that domain.
