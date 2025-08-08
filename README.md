@@ -9,6 +9,7 @@ Minimal Chrome extension.
 - Clicking an icon expands a content panel to the left starting at 300px. The panel can be resized horizontally while the icon strip remains fixed.
 - Smooth animation for expanding and collapsing. Clicking the active icon closes the panel; selecting another icon swaps the panel content without collapsing.
 - New buttons can be added at runtime via `window.omoraAddButton`.
+- Built-in Color Picker with saturation/value square, hue slider, HEX and RGB fields, copy buttons, eyedropper, and persistent last color.
 - Website-specific buttons. Each site can provide its own button configuration through scripts in `buttons/website-specific`. The ChatGPT implementation adds a button on `chatgpt.com` that opens a settings menu where users can switch between no background, the default image, or a custom uploaded picture, and choose chat bubble colors from a grid of swatches.
 - A persistent Settings button is anchored to the bottom of the icon strip.
 - Styling for the sidebar lives in a dedicated `sidebar.css` file for easier customization.
