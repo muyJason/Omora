@@ -31,3 +31,5 @@ Minimal Chrome extension.
 - All sidebar text and the chevron icon switch between white and black
   according to the selected theme.
 - Scrollbars inside the sidebar are hidden for a cleaner appearance.
+- "Appearance" settings tab lets you set a custom background image or chat
+  bubble color with live preview and localStorage persistence.
