@@ -11,7 +11,8 @@
   "permissions": ["storage", "tabs"],
   "background": { "service_worker": "background.js" },
   "content_scripts": [
-    { "matches": ["<all_urls>"], "js": ["sidebar.js"], "css": ["sidebar.css"], "run_at": "document_end" }
+    { "matches": ["<all_urls>"], "js": ["sidebar.js"], "css": ["sidebar.css"], "run_at": "document_end" },
+    { "matches": ["https://chatgpt.com/*"], "js": ["buttons/website-specific/chatgpt.js"], "run_at": "document_end" }
   ],
   "action": {
     "default_icon": {
