@@ -9,28 +9,18 @@
     "128": "public/icon128.png"
   },
   "permissions": ["storage", "tabs"],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "background": { "service_worker": "background.js" },
   "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "css": ["sidebar.css"],
-      "js": ["sidebar.js"],
-      "run_at": "document_end"
-    },
-    {
-      "matches": ["https://chat.openai.com/*"],
-      "js": ["appearanceInjector.js"],
-      "run_at": "document_end"
-    }
+    { "matches": ["<all_urls>"], "js": ["sidebar.js"], "css": ["sidebar.css"], "run_at": "document_end" },
+    { "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*"], "js": ["appearanceInjector.js"], "run_at": "document_end" }
   ],
   "action": {
-    "default_title": "Omora",
     "default_icon": {
       "16": "public/icon16.png",
       "32": "public/icon32.png",
       "128": "public/icon128.png"
-    }
-  }
+    },
+    "default_title": "Omora"
+  },
+  "options_page": "settingsAppearance.html"
 }

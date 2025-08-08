@@ -210,6 +210,13 @@
           buttonsContainer.appendChild(createButton(cfg));
         });
 
+        // Neuer Appearance-Button
+        buttonsContainer.appendChild(createButton({
+          icon: '🎨',
+          label: 'Appearance',
+          onClick: () => chrome.runtime.openOptionsPage()
+        }));
+
         bottomButtonConfigs.forEach((cfg) => {
           bottomButtonsContainer.appendChild(createButton(cfg));
         });

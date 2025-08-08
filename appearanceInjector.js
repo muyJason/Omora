@@ -1,85 +1,49 @@
-// Content script to inject appearance settings on ChatGPT pages
 (function() {
   'use strict';
-
   const CHAT_CONTAINER_SELECTOR = 'main';
   const USER_BUBBLE_SELECTOR = '[data-message-author-role="user"], .user, [class*="user"]';
 
-  function getChatContainer() {
-    return document.querySelector(CHAT_CONTAINER_SELECTOR);
+  const getChatContainer = () => document.querySelector(CHAT_CONTAINER_SELECTOR);
+
+  async function readState() {
+    return await chrome.storage.local.get(['omoraBgType','omoraBgImage','omoraBubbleColor']);
   }
 
-  function applyBackground() {
-    const container = getChatContainer();
-    if (!container) return;
-
-    const type = localStorage.getItem('omoraBgType');
-    if (type === 'none') {
-      container.style.backgroundImage = 'none';
-      container.style.backgroundColor = '#ffffff';
-    } else if (type === 'custom') {
-      const img = localStorage.getItem('omoraBgImage');
-      if (img) {
-        container.style.backgroundImage = `url(${img})`;
-        container.style.backgroundSize = 'cover';
-        container.style.backgroundPosition = 'center';
-        container.style.backgroundRepeat = 'no-repeat';
-        container.style.backgroundColor = '';
-      }
-    } else {
-      container.style.backgroundImage = '';
-      container.style.backgroundColor = '';
-    }
+  async function applyBackground() {
+    const el = getChatContainer(); if (!el) return;
+    const { omoraBgType = 'default', omoraBgImage = '' } = await readState();
+    if (omoraBgType === 'custom' && omoraBgImage) { el.style.backgroundImage = `url(${omoraBgImage})`; el.style.backgroundColor = ''; el.style.backgroundSize = 'cover'; el.style.backgroundPosition = 'center'; }
+    else if (omoraBgType === 'none') { el.style.backgroundImage = ''; el.style.backgroundColor = 'transparent'; }
+    else { el.style.backgroundImage = ''; el.style.backgroundColor = ''; }
   }
 
-  function applyChatBubbleColor() {
-    const color = localStorage.getItem('omoraBubbleColor');
-    if (!color) return;
-
-    const bubbles = document.querySelectorAll(USER_BUBBLE_SELECTOR);
-    bubbles.forEach(b => {
-      b.style.backgroundColor = color;
-    });
+  async function applyChatBubbleColor() {
+    const { omoraBubbleColor = '' } = await readState();
+    if (!omoraBubbleColor) return;
+    document.querySelectorAll(USER_BUBBLE_SELECTOR).forEach(b => { b.style.backgroundColor = omoraBubbleColor; });
   }
 
   function observeMessages() {
-    const container = getChatContainer();
-    if (!container) return;
-
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType !== Node.ELEMENT_NODE) return;
-
-          if (node.matches && node.matches(USER_BUBBLE_SELECTOR)) {
-            node.style.backgroundColor = localStorage.getItem('omoraBubbleColor') || '';
-          }
-
-          if (node.querySelectorAll) {
-            const bubbles = node.querySelectorAll(USER_BUBBLE_SELECTOR);
-            bubbles.forEach(b => {
-              b.style.backgroundColor = localStorage.getItem('omoraBubbleColor') || '';
-            });
-          }
-        });
-      });
-    });
-
-    observer.observe(container, { childList: true, subtree: true });
+    const root = document.body;
+    if (!root) return;
+    const mo = new MutationObserver(() => applyChatBubbleColor());
+    mo.observe(root, { childList: true, subtree: true });
   }
 
-  function initAppearance() {
-    applyBackground();
-    applyChatBubbleColor();
+  function listenStorage() {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local') return;
+      if (changes.omoraBgType || changes.omoraBgImage) applyBackground();
+      if (changes.omoraBubbleColor) applyChatBubbleColor();
+    });
+  }
+
+  async function init() {
+    await applyBackground();
+    await applyChatBubbleColor();
     observeMessages();
-
-    window.addEventListener('storage', e => {
-      if (['omoraBgType', 'omoraBgImage', 'omoraBubbleColor'].includes(e.key)) {
-        applyBackground();
-        applyChatBubbleColor();
-      }
-    });
+    listenStorage();
   }
 
-  initAppearance();
+  init();
 })();
