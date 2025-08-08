@@ -62,51 +62,6 @@
 
     window.omoraAddButton = addButton;
 
-    const supportedSites = {
-      chatgpt: { hasAppearanceSettings: true },
-      x: { hasCustomTheme: true },
-      crunchyroll: { hasVideoControls: true }
-    };
-
-    let sitePanel;
-
-    try {
-      const url = new URL(window.location.href);
-      const hostname = url.hostname.replace(/^www\./, '');
-      const domainKey = hostname.split('.')[0];
-
-      if (
-        supportedSites[domainKey] &&
-        !(domainKey === 'chatgpt' && url.pathname.startsWith('/codex'))
-      ) {
-        addButton({
-          icon: '🌐',
-          label: 'Website-Specific',
-          onClick: async (e) => {
-            if (sitePanel) {
-              sitePanel.remove();
-              sitePanel = undefined;
-              return;
-            }
-            sitePanel = document.createElement('div');
-            sitePanel.className = 'site-settings-panel';
-            e.currentTarget.insertAdjacentElement('afterend', sitePanel);
-            try {
-              const moduleUrl = chrome.runtime.getURL(`features/${domainKey}.js`);
-              const mod = await import(moduleUrl);
-              if (mod && typeof mod.default === 'function') {
-                mod.default(sitePanel);
-              }
-            } catch (err) {
-              sitePanel.textContent = 'Failed to load settings.';
-            }
-          }
-        });
-      }
-    } catch (err) {
-      // ignore URL parsing errors
-    }
-
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
     const computeTheme = () => {
