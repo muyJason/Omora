@@ -8,7 +8,8 @@ Minimal Chrome extension.
 - Fixed 30px icon bar with tooltips
 - Resizable 200ms animated tool panel
 - Built-in Color Picker plugin storing the last color
-- Automatic light and dark theme selection
+- Toggle sidebar by clicking the Omora extension icon
+- Dark themed sidebar
 
 ## Development
 

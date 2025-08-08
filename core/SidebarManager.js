@@ -6,6 +6,7 @@ export class SidebarManager {
     this.panelWidth = isNaN(saved) ? 300 : saved
     this.container = document.createElement('div')
     this.container.id = 'omora-sidebar'
+    this.container.style.display = 'none'
     this.panel = document.createElement('div')
     this.panel.className = 'omora-panel'
     this.panel.style.width = '0px'
