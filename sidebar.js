@@ -75,7 +75,10 @@
       const hostname = url.hostname.replace(/^www\./, '');
       const domainKey = hostname.split('.')[0];
 
-      if (supportedSites[domainKey]) {
+      if (
+        supportedSites[domainKey] &&
+        !(domainKey === 'chatgpt' && url.pathname.startsWith('/codex'))
+      ) {
         addButton({
           icon: '🌐',
           label: 'Website-Specific',
@@ -92,9 +95,10 @@
               const moduleUrl = chrome.runtime.getURL(`features/${domainKey}.js`);
               const mod = await import(moduleUrl);
               if (mod && typeof mod.default === 'function') {
-                mod.default(sitePanel, domainKey);
+                await mod.default(sitePanel);
               }
             } catch (err) {
+              console.error(err);
               sitePanel.textContent = 'Failed to load settings.';
             }
           }
@@ -104,7 +108,6 @@
       // ignore URL parsing errors
     }
 
-    addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
     const computeTheme = () => {
@@ -203,13 +206,6 @@
         buttonConfigs.forEach((cfg) => {
           buttonsContainer.appendChild(createButton(cfg));
         });
-
-        // Neuer Appearance-Button
-        buttonsContainer.appendChild(createButton({
-          icon: '🎨',
-          label: 'Appearance',
-          onClick: () => chrome.runtime.openOptionsPage()
-        }));
 
         bottomButtonConfigs.forEach((cfg) => {
           bottomButtonsContainer.appendChild(createButton(cfg));

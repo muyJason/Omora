@@ -31,11 +31,13 @@ Minimal Chrome extension.
 - All sidebar text and the chevron icon switch between white and black
   according to the selected theme.
 - Scrollbars inside the sidebar are hidden for a cleaner appearance.
-- "Appearance" settings tab lets you set a custom background image or chat
-  bubble color with live preview and localStorage persistence.
-- Saved appearance settings are automatically injected into ChatGPT pages
-  (https://chat.openai.com/*), applying background and user chat bubble colors
-  in real time.
+- On https://chatgpt.com/* (excluding /codex), the "Website-Specific" panel
+  lets you choose a custom background image or chat bubble color with live
+  preview and chrome.storage persistence.
+- Saved appearance settings are automatically injected into chatgpt.com
+  pages, applying background and user chat bubble colors in real time.
+- ChatGPT appearance controls are exposed as web-accessible resources so the
+  panel loads reliably on any chatgpt.com page (except /codex).
 - The sidebar detects the current page's domain without relying on the
   `chrome.tabs` API and shows a "Website-Specific" button for supported
   sites, opening a feature panel tailored to that domain.
