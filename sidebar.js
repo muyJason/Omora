@@ -1,252 +1,166 @@
 (() => {
   try {
     const body = document.body;
-    if (!body) {
-      return;
-    }
+    if (!body) return;
 
-    let sidebar;
-    let observer;
-    let handle;
-    let buttonsContainer;
-    let bottomButtonsContainer;
+    let container;
+    let panel;
+    let iconsTop;
+    let iconsBottom;
+    let activeBtn;
+    let panelWidth = 300;
     let isResizing = false;
-    let startResize;
-    let onMouseMove;
-    let stopResize;
-    let detectedBg;
-    let themeClass;
     let mediaQuery;
-    let mediaListener;
-    let themeObserver;
-
-    const updateSidebarState = () => {
-      if (!sidebar) {
-        return;
-      }
-      if (sidebar.offsetWidth <= 100) {
-        sidebar.classList.add('collapsed');
-      } else {
-        sidebar.classList.remove('collapsed');
-      }
-    };
+    let startX = 0;
+    let startWidth = 0;
 
     const buttonConfigs = [];
     const bottomButtonConfigs = [];
 
-    const createButton = ({ icon, label, onClick }) => {
+    const createButton = ({ icon, label, content, onClick }) => {
       const btn = document.createElement('button');
-      btn.className = 'omora-button';
-      const iconSpan = document.createElement('span');
-      iconSpan.className = 'icon';
-      iconSpan.textContent = icon;
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'label';
-      labelSpan.textContent = label;
-      btn.append(iconSpan, labelSpan);
-      if (onClick) {
-        btn.addEventListener('click', onClick);
-      }
+      btn.className = 'omora-btn';
+      btn.innerHTML = icon;
+      btn.title = label;
+      btn.addEventListener('click', () => handleButtonClick(btn, content, onClick));
       return btn;
+    };
+
+    const handleButtonClick = (btn, content, onClick) => {
+      if (activeBtn === btn) {
+        closePanel();
+        return;
+      }
+      if (activeBtn) {
+        activeBtn.classList.remove('active');
+      }
+      activeBtn = btn;
+      btn.classList.add('active');
+      panel.innerHTML = '';
+      panel.appendChild(resizeHandle);
+      if (content) {
+        const el = typeof content === 'function' ? content() : content;
+        if (el) {
+          panel.appendChild(el);
+        }
+      } else if (onClick) {
+        onClick();
+      }
+      openPanel();
+    };
+
+    const openPanel = () => {
+      container.classList.add('open');
+      panel.style.width = panelWidth + 'px';
+    };
+
+    const closePanel = () => {
+      container.classList.remove('open');
+      panel.style.width = '0px';
+      if (activeBtn) {
+        activeBtn.classList.remove('active');
+        activeBtn = undefined;
+      }
     };
 
     const addButton = (config) => {
       const list = config.position === 'bottom' ? bottomButtonConfigs : buttonConfigs;
       list.push(config);
-      const container = config.position === 'bottom' ? bottomButtonsContainer : buttonsContainer;
-      if (container) {
-        container.appendChild(createButton(config));
-        updateSidebarState();
+      const target = config.position === 'bottom' ? iconsBottom : iconsTop;
+      if (target) {
+        target.appendChild(createButton(config));
       }
     };
 
     window.omoraAddButton = addButton;
-
     if (Array.isArray(window.omoraPendingButtons)) {
       window.omoraPendingButtons.forEach(addButton);
       window.omoraPendingButtons = [];
     }
 
-    addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startX = e.clientX;
+      startWidth = panelWidth;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', stopResize);
+      e.preventDefault();
+    });
 
-    const computeTheme = () => {
-      detectedBg = undefined;
-      themeClass = undefined;
-      const force = window.omoraForceTheme;
-      if (force === 'light' || force === 'dark') {
-        themeClass = force === 'dark' ? 'omora-theme-dark' : 'omora-theme-light';
-        if (themeClass === 'omora-theme-dark') {
-          detectedBg = '#1e1e1e';
-        }
-        return;
-      }
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        themeClass = 'omora-theme-dark';
-        detectedBg = '#1e1e1e';
-        return;
-      }
-      let bg = getComputedStyle(body).backgroundColor;
-      if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') {
-        bg = getComputedStyle(document.documentElement).backgroundColor;
-      }
-      detectedBg = bg;
-      const match = bg && bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if (match) {
-        const r = parseInt(match[1], 10);
-        const g = parseInt(match[2], 10);
-        const b = parseInt(match[3], 10);
-        const [rn, gn, bn] = [r, g, b].map((v) => {
-          const nv = v / 255;
-          return nv <= 0.03928 ? nv / 12.92 : ((nv + 0.055) / 1.055) ** 2.4;
-        });
-        const luminance = 0.2126 * rn + 0.7152 * gn + 0.0722 * bn;
-        const whiteContrast = (1.05) / (luminance + 0.05);
-        const blackContrast = (luminance + 0.05) / 0.05;
-        themeClass = whiteContrast >= blackContrast ? 'omora-theme-dark' : 'omora-theme-light';
-      }
-      if (themeClass === 'omora-theme-dark' && (!detectedBg || detectedBg === 'transparent' || detectedBg === 'rgba(0, 0, 0, 0)')) {
-        detectedBg = '#1e1e1e';
-      }
+    const onMouseMove = (e) => {
+      if (!isResizing) return;
+      const delta = startX - e.clientX;
+      panelWidth = Math.max(200, startWidth + delta);
+      panel.style.width = panelWidth + 'px';
     };
 
-    const applyTheme = () => {
-      if (!sidebar) {
-        return;
-      }
-      sidebar.classList.remove('omora-theme-light', 'omora-theme-dark');
-      sidebar.style.backgroundColor = detectedBg || '';
-      if (themeClass) {
-        sidebar.classList.add(themeClass);
-      }
+    const stopResize = () => {
+      if (!isResizing) return;
+      isResizing = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', stopResize);
     };
 
-    const adjustBody = () => {
-      if (sidebar) {
-        body.style.marginRight = `${sidebar.offsetWidth}px`;
-        updateSidebarState();
-      } else {
-        body.style.marginRight = '';
+    const applyTheme = (el) => {
+      let theme = window.omoraForceTheme;
+      if (theme !== "light" && theme !== "dark") {
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        theme = prefersDark ? "dark" : "light";
       }
+      el.classList.add(theme === "dark" ? "omora-theme-dark" : "omora-theme-light");
+    };
+
+    const updateTheme = () => {
+      if (!container) return;
+      container.classList.remove("omora-theme-dark", "omora-theme-light");
+      applyTheme(container);
     };
 
     const showSidebar = () => {
-      if (!sidebar) {
-        computeTheme();
-        sidebar = document.createElement('div');
-        sidebar.id = 'omora-sidebar';
-        applyTheme();
+      if (container) return;
+      container = document.createElement('div');
+      container.id = 'omora-sidebar';
 
-        handle = document.createElement('div');
-        handle.className = 'resize-handle';
-        sidebar.appendChild(handle);
+      panel = document.createElement('div');
+      panel.className = 'omora-panel';
+      panel.appendChild(resizeHandle);
 
-        const toggleButton = createButton({ icon: '\u276F', label: 'Collaps' });
-        toggleButton.classList.add('expand-toggle');
-        toggleButton.addEventListener('click', () => {
-          const targetWidth = sidebar.offsetWidth > 100 ? 50 : 200;
-          sidebar.style.width = `${targetWidth}px`;
-          if (targetWidth <= 100) {
-            sidebar.classList.add('collapsed');
-          } else {
-            sidebar.classList.remove('collapsed');
-          }
-        });
-        sidebar.appendChild(toggleButton);
+      const icons = document.createElement('div');
+      icons.className = 'omora-icons';
+      iconsTop = document.createElement('div');
+      iconsTop.className = 'icons-top';
+      iconsBottom = document.createElement('div');
+      iconsBottom.className = 'icons-bottom';
+      icons.appendChild(iconsTop);
+      icons.appendChild(iconsBottom);
 
-        buttonsContainer = document.createElement('div');
-        buttonsContainer.className = 'buttons-container';
-        sidebar.appendChild(buttonsContainer);
-
-        bottomButtonsContainer = document.createElement('div');
-        bottomButtonsContainer.className = 'bottom-buttons';
-        sidebar.appendChild(bottomButtonsContainer);
-
-        buttonConfigs.forEach((cfg) => {
-          buttonsContainer.appendChild(createButton(cfg));
-        });
-
-        bottomButtonConfigs.forEach((cfg) => {
-          bottomButtonsContainer.appendChild(createButton(cfg));
-        });
-
-        onMouseMove = (e) => {
-          if (!isResizing) {
-            return;
-          }
-          const newWidth = Math.max(window.innerWidth - e.clientX, 50);
-          sidebar.style.width = `${newWidth}px`;
-        };
-
-        stopResize = () => {
-          if (!isResizing) {
-            return;
-          }
-          isResizing = false;
-          document.removeEventListener('mousemove', onMouseMove);
-          document.removeEventListener('mouseup', stopResize);
-          body.style.userSelect = '';
-          sidebar.style.transition = '';
-        };
-
-        startResize = (e) => {
-          isResizing = true;
-          sidebar.style.transition = 'none';
-          document.addEventListener('mousemove', onMouseMove);
-          document.addEventListener('mouseup', stopResize);
-          body.style.userSelect = 'none';
-          e.preventDefault();
-        };
-
-        handle.addEventListener('mousedown', startResize);
-
-        body.appendChild(sidebar);
-        observer = new ResizeObserver(adjustBody);
-        observer.observe(sidebar);
-
-        if (window.matchMedia) {
-          mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-          mediaListener = () => {
-            computeTheme();
-            applyTheme();
-          };
-          mediaQuery.addEventListener('change', mediaListener);
-        }
-
-        themeObserver = new MutationObserver(() => {
-          computeTheme();
-          applyTheme();
-        });
-        themeObserver.observe(body, { attributes: true, attributeFilter: ['style', 'class'] });
-        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+      container.appendChild(panel);
+      container.appendChild(icons);
+      applyTheme(container);
+      if (window.matchMedia) {
+        mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        mediaQuery.addEventListener("change", updateTheme);
       }
-      adjustBody();
+      body.appendChild(container);
+
+      buttonConfigs.forEach((cfg) => iconsTop.appendChild(createButton(cfg)));
+      bottomButtonConfigs.forEach((cfg) => iconsBottom.appendChild(createButton(cfg)));
     };
 
     const hideSidebar = () => {
-      if (sidebar) {
-        if (isResizing) {
-          stopResize();
-        }
-        if (observer) {
-          observer.disconnect();
-        }
-        handle.removeEventListener('mousedown', startResize);
-        sidebar.remove();
-        sidebar = undefined;
-        buttonsContainer = undefined;
-        bottomButtonsContainer = undefined;
-        if (mediaQuery && mediaListener) {
-          mediaQuery.removeEventListener('change', mediaListener);
-          mediaQuery = undefined;
-          mediaListener = undefined;
-        }
-        if (themeObserver) {
-          themeObserver.disconnect();
-          themeObserver = undefined;
-        }
+      if (!container) return;
+      container.remove();
+      container = undefined;
+      panel = undefined;
+      iconsTop = undefined;
+      iconsBottom = undefined;
+      activeBtn = undefined;
+      if (mediaQuery) {
+        mediaQuery.removeEventListener("change", updateTheme);
+        mediaQuery = undefined;
       }
-      adjustBody();
     };
 
     chrome.storage.local.get('sidebarVisible', ({ sidebarVisible }) => {
@@ -262,7 +176,19 @@
         hideSidebar();
       }
     });
+
+    addButton({
+      icon: '⚙️',
+      label: 'Settings',
+      content: () => {
+        const div = document.createElement('div');
+        div.className = 'settings-panel';
+        div.textContent = 'Settings';
+        return div;
+      },
+      position: 'bottom',
+    });
   } catch (e) {
-    /* Fail silently on restricted pages */
+    /* Fail silently */
   }
 })();

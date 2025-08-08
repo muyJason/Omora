@@ -4,172 +4,86 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px;
-  height: 100vh;
-  background-color: #fff;
-  border-left: 1px solid #ccc;
+  bottom: 0;
   z-index: 2147483647;
+  display: flex;
+  font-family: sans-serif;
+}
+
+#omora-sidebar .omora-panel {
+  width: 0;
   overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  min-width: 50px;
-  max-width: 80vw;
+  background: var(--omora-panel-bg);
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+#omora-sidebar .omora-panel .resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: ew-resize;
+}
+
+#omora-sidebar .omora-icons {
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  background: var(--omora-bg);
   display: flex;
   flex-direction: column;
-  font-family: sans-serif;
-  transition: width 0.5s;
+  align-items: center;
+  padding: 4px 0;
+}
+
+#omora-sidebar .omora-icons .icons-top,
+#omora-sidebar .omora-icons .icons-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+#omora-sidebar .omora-icons .icons-bottom {
+  margin-top: auto;
+}
+
+#omora-sidebar .omora-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#omora-sidebar .omora-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+}
+.omora-theme-light #omora-sidebar .omora-btn.active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.omora-theme-dark {
+  --omora-bg: #1e1e1e;
+  --omora-panel-bg: #2d2d2d;
+  color: #fff;
+}
+
+.omora-theme-light {
+  --omora-bg: #f5f5f5;
+  --omora-panel-bg: #fff;
+  color: #000;
 }
 
 #omora-sidebar::-webkit-scrollbar {
   display: none;
 }
 
-#omora-sidebar.omora-theme-dark,
-#omora-sidebar.omora-theme-dark *,
-#omora-sidebar.omora-theme-dark::before,
-#omora-sidebar.omora-theme-dark::after,
-#omora-sidebar.omora-theme-dark *::before,
-#omora-sidebar.omora-theme-dark *::after {
-  color: #fff !important;
-  fill: #fff !important;
-  stroke: #fff !important;
+#omora-sidebar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-
-#omora-sidebar.omora-theme-light {
-  color: #000;
-}
-
-#omora-sidebar .resize-handle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 5px;
-  height: 100%;
-  cursor: ew-resize;
-}
-
-#omora-sidebar .expand-toggle {
-  margin-left: 5px;
-  justify-content: flex-start;
-}
-
-#omora-sidebar .expand-toggle .icon {
-  display: inline-block;
-  transition: transform 0.5s;
-  transform: rotate(180deg);
-}
-
-#omora-sidebar.collapsed .expand-toggle {
-  margin-left: 0;
-}
-
-#omora-sidebar.collapsed .expand-toggle .icon {
-  transform: rotate(0deg);
-}
-
-#omora-sidebar .expand-toggle .label {
-}
-
-#omora-sidebar.collapsed .expand-toggle .label {
-  display: none;
-}
-
-#omora-sidebar .buttons-container {
-  margin-left: 5px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-#omora-sidebar .bottom-buttons {
-  margin-left: 5px;
-  margin-top: auto;
-}
-
-#omora-sidebar.collapsed .buttons-container,
-#omora-sidebar.collapsed .bottom-buttons {
-  margin-left: 0;
-}
-
-#omora-sidebar button {
-  color: inherit;
-}
-
-#omora-sidebar .omora-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-}
-
-#omora-sidebar.collapsed .omora-button,
-#omora-sidebar.collapsed .expand-toggle {
-  justify-content: center;
-}
-
-#omora-sidebar.collapsed .omora-button .label {
-  display: none;
-}
-
-#omora-sidebar .site-settings-panel {
-  padding: 8px;
-  border-top: 1px solid #ccc;
-}
-
-#omora-sidebar.collapsed .site-settings-panel {
-  display: none;
-}
-
-#omora-sidebar .section {
-  margin-bottom: 12px;
-}
-
-#omora-sidebar .radio-group {
-  display: flex;
-  gap: 10px;
-}
-
-#omora-sidebar #custom-bg {
-  margin-top: 8px;
-}
-
-#omora-sidebar #background-preview {
-  margin-top: 8px;
-  width: 100%;
-  height: 100px;
-  border: 1px solid #ccc;
-  background-size: cover;
-  background-position: center;
-}
-
-#omora-sidebar .color-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 24px);
-  gap: 6px;
-  margin-top: 8px;
-}
-
-#omora-sidebar .color-option {
-  width: 24px;
-  height: 24px;
-  border: none;
-  cursor: pointer;
-}
-
-#omora-sidebar .color-option.selected {
-  outline: 2px solid #000;
-}
-
-#omora-sidebar.omora-theme-dark .color-option.selected {
-  outline: 2px solid #fff;
-}
-
-#omora-sidebar .hidden {
-  display: none;
-}
-
