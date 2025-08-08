@@ -70,45 +70,39 @@
 
     let sitePanel;
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs && tabs[0];
-      if (!tab || !tab.url) {
-        return;
-      }
-      try {
-        const url = new URL(tab.url);
-        const hostname = url.hostname.replace(/^www\./, '');
-        const domainKey = hostname.split('.')[0];
+    try {
+      const url = new URL(window.location.href);
+      const hostname = url.hostname.replace(/^www\./, '');
+      const domainKey = hostname.split('.')[0];
 
-        if (supportedSites[domainKey]) {
-          addButton({
-            icon: '🌐',
-            label: 'Website-Specific',
-            onClick: async (e) => {
-              if (sitePanel) {
-                sitePanel.remove();
-                sitePanel = undefined;
-                return;
-              }
-              sitePanel = document.createElement('div');
-              sitePanel.className = 'site-settings-panel';
-              e.currentTarget.insertAdjacentElement('afterend', sitePanel);
-              try {
-                const moduleUrl = chrome.runtime.getURL(`features/${domainKey}.js`);
-                const mod = await import(moduleUrl);
-                if (mod && typeof mod.default === 'function') {
-                  mod.default(sitePanel, domainKey);
-                }
-              } catch (err) {
-                sitePanel.textContent = 'Failed to load settings.';
-              }
+      if (supportedSites[domainKey]) {
+        addButton({
+          icon: '🌐',
+          label: 'Website-Specific',
+          onClick: async (e) => {
+            if (sitePanel) {
+              sitePanel.remove();
+              sitePanel = undefined;
+              return;
             }
-          });
-        }
-      } catch (err) {
-        // ignore URL parsing errors
+            sitePanel = document.createElement('div');
+            sitePanel.className = 'site-settings-panel';
+            e.currentTarget.insertAdjacentElement('afterend', sitePanel);
+            try {
+              const moduleUrl = chrome.runtime.getURL(`features/${domainKey}.js`);
+              const mod = await import(moduleUrl);
+              if (mod && typeof mod.default === 'function') {
+                mod.default(sitePanel, domainKey);
+              }
+            } catch (err) {
+              sitePanel.textContent = 'Failed to load settings.';
+            }
+          }
+        });
       }
-    });
+    } catch (err) {
+      // ignore URL parsing errors
+    }
 
     addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
