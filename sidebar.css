@@ -116,3 +116,60 @@
   display: none;
 }
 
+#omora-sidebar .site-settings-panel {
+  padding: 8px;
+  border-top: 1px solid #ccc;
+}
+
+#omora-sidebar.collapsed .site-settings-panel {
+  display: none;
+}
+
+#omora-sidebar .section {
+  margin-bottom: 12px;
+}
+
+#omora-sidebar .radio-group {
+  display: flex;
+  gap: 10px;
+}
+
+#omora-sidebar #custom-bg {
+  margin-top: 8px;
+}
+
+#omora-sidebar #background-preview {
+  margin-top: 8px;
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ccc;
+  background-size: cover;
+  background-position: center;
+}
+
+#omora-sidebar .color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 24px);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+#omora-sidebar .color-option {
+  width: 24px;
+  height: 24px;
+  border: none;
+  cursor: pointer;
+}
+
+#omora-sidebar .color-option.selected {
+  outline: 2px solid #000;
+}
+
+#omora-sidebar.omora-theme-dark .color-option.selected {
+  outline: 2px solid #fff;
+}
+
+#omora-sidebar .hidden {
+  display: none;
+}
+

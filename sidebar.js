@@ -62,6 +62,44 @@
 
     window.omoraAddButton = addButton;
 
+    const supportedSites = {
+      chatgpt: { hasAppearanceSettings: true },
+      x: { hasCustomTheme: true },
+      crunchyroll: { hasVideoControls: true }
+    };
+
+    let sitePanel;
+
+    const hostname = window.location.hostname.replace(/^www\./, '');
+    const domainKey = hostname.split('.')[0];
+    const domainLabel = domainKey.charAt(0).toUpperCase() + domainKey.slice(1);
+
+    if (supportedSites[domainKey]) {
+      addButton({
+        icon: '🌐',
+        label: `${domainLabel} Features`,
+        onClick: async (e) => {
+          if (sitePanel) {
+            sitePanel.remove();
+            sitePanel = undefined;
+            return;
+          }
+          sitePanel = document.createElement('div');
+          sitePanel.className = 'site-settings-panel';
+          e.currentTarget.insertAdjacentElement('afterend', sitePanel);
+          try {
+            const moduleUrl = chrome.runtime.getURL(`features/${domainKey}.js`);
+            const mod = await import(moduleUrl);
+            if (mod && typeof mod.default === 'function') {
+              mod.default(sitePanel, domainKey);
+            }
+          } catch (err) {
+            sitePanel.textContent = 'Failed to load settings.';
+          }
+        }
+      });
+    }
+
     addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 

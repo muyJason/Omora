@@ -36,3 +36,5 @@ Minimal Chrome extension.
 - Saved appearance settings are automatically injected into ChatGPT pages
   (https://chat.openai.com/*), applying background and user chat bubble colors
   in real time.
+- When browsing supported sites, a domain-specific button (e.g., "ChatGPT Features")
+  appears in the sidebar and opens a settings panel for that site's custom options.
