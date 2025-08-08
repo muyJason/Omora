@@ -16,7 +16,9 @@
     let stopResize;
     let detectedBg;
     let themeClass;
-    let themeComputed = false;
+    let mediaQuery;
+    let mediaListener;
+    let themeObserver;
 
     const updateSidebarState = () => {
       if (!sidebar) {
@@ -63,14 +65,12 @@
     addButton({ icon: '🏠', label: 'Home', onClick: () => console.log('Home clicked') });
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
-    const detectTheme = () => {
-      if (themeComputed) {
-        return;
-      }
-      themeComputed = true;
+    const computeTheme = () => {
+      detectedBg = undefined;
+      themeClass = undefined;
       const force = window.omoraForceTheme;
       if (force === 'light' || force === 'dark') {
-        themeClass = force === 'light' ? 'omora-theme-light' : 'omora-theme-dark';
+        themeClass = force === 'dark' ? 'omora-theme-dark' : 'omora-theme-light';
         if (themeClass === 'omora-theme-dark') {
           detectedBg = '#1e1e1e';
         }
@@ -92,11 +92,28 @@
         const r = parseInt(match[1], 10);
         const g = parseInt(match[2], 10);
         const b = parseInt(match[3], 10);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        themeClass = brightness < 128 ? 'omora-theme-light' : 'omora-theme-dark';
+        const [rn, gn, bn] = [r, g, b].map((v) => {
+          const nv = v / 255;
+          return nv <= 0.03928 ? nv / 12.92 : ((nv + 0.055) / 1.055) ** 2.4;
+        });
+        const luminance = 0.2126 * rn + 0.7152 * gn + 0.0722 * bn;
+        const whiteContrast = (1.05) / (luminance + 0.05);
+        const blackContrast = (luminance + 0.05) / 0.05;
+        themeClass = whiteContrast >= blackContrast ? 'omora-theme-dark' : 'omora-theme-light';
       }
       if (themeClass === 'omora-theme-dark' && (!detectedBg || detectedBg === 'transparent' || detectedBg === 'rgba(0, 0, 0, 0)')) {
         detectedBg = '#1e1e1e';
+      }
+    };
+
+    const applyTheme = () => {
+      if (!sidebar) {
+        return;
+      }
+      sidebar.classList.remove('omora-theme-light', 'omora-theme-dark');
+      sidebar.style.backgroundColor = detectedBg || '';
+      if (themeClass) {
+        sidebar.classList.add(themeClass);
       }
     };
 
@@ -111,15 +128,10 @@
 
     const showSidebar = () => {
       if (!sidebar) {
-        detectTheme();
+        computeTheme();
         sidebar = document.createElement('div');
         sidebar.id = 'omora-sidebar';
-        if (detectedBg) {
-          sidebar.style.backgroundColor = detectedBg;
-        }
-        if (themeClass) {
-          sidebar.classList.add(themeClass);
-        }
+        applyTheme();
 
         handle = document.createElement('div');
         handle.className = 'resize-handle';
@@ -187,6 +199,22 @@
         body.appendChild(sidebar);
         observer = new ResizeObserver(adjustBody);
         observer.observe(sidebar);
+
+        if (window.matchMedia) {
+          mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          mediaListener = () => {
+            computeTheme();
+            applyTheme();
+          };
+          mediaQuery.addEventListener('change', mediaListener);
+        }
+
+        themeObserver = new MutationObserver(() => {
+          computeTheme();
+          applyTheme();
+        });
+        themeObserver.observe(body, { attributes: true, attributeFilter: ['style', 'class'] });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
       }
       adjustBody();
     };
@@ -196,12 +224,23 @@
         if (isResizing) {
           stopResize();
         }
-        observer.disconnect();
+        if (observer) {
+          observer.disconnect();
+        }
         handle.removeEventListener('mousedown', startResize);
         sidebar.remove();
         sidebar = undefined;
         buttonsContainer = undefined;
         bottomButtonsContainer = undefined;
+        if (mediaQuery && mediaListener) {
+          mediaQuery.removeEventListener('change', mediaListener);
+          mediaQuery = undefined;
+          mediaListener = undefined;
+        }
+        if (themeObserver) {
+          themeObserver.disconnect();
+          themeObserver = undefined;
+        }
       }
       adjustBody();
     };
