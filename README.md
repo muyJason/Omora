@@ -12,6 +12,9 @@ Minimal Chrome extension.
 - Scaffold for sidebar buttons. Buttons show their icon and label when
   the sidebar exceeds 100px and collapse to icons only when narrower.
   New buttons can be added at runtime via `window.omoraAddButton`.
+- Website-specific buttons. Each site can provide its own button
+  configuration through scripts in `buttons/website-specific`. The first
+  implementation adds a ChatGPT button on `chatgpt.com`.
 - Expand/Collapse toggle button at the top. It animates the sidebar
   width between 50px and 200px over 0.5s, shows a "Collaps" label when
   expanded, and rotates its chevron icon 180° to indicate the state.

@@ -62,6 +62,11 @@
 
     window.omoraAddButton = addButton;
 
+    if (Array.isArray(window.omoraPendingButtons)) {
+      window.omoraPendingButtons.forEach(addButton);
+      window.omoraPendingButtons = [];
+    }
+
     addButton({ icon: '⚙️', label: 'Settings', onClick: () => console.log('Settings clicked'), position: 'bottom' });
 
     const computeTheme = () => {
