@@ -23,7 +23,11 @@ Minimal Chrome extension.
 - Automatically selects a light or dark sidebar theme with the following
   priority: a global `window.omoraForceTheme` override, the user's
   operating system dark mode preference, and finally the page's
-  background brightness. A default dark background is used when dark
-  mode is active.
-- All sidebar text and the chevron icon switch to white in dark mode and to black in light mode.
+  background color. The chosen theme updates on-the-fly when the page or
+  system theme changes. Text color is picked to maintain WCAG AA
+  contrast against the detected background (white text for dark
+  backgrounds, black text for light backgrounds). A default dark
+  background is used when dark mode is active.
+- All sidebar text and the chevron icon switch between white and black
+  according to the selected theme.
 - Scrollbars inside the sidebar are hidden for a cleaner appearance.
