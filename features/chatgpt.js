@@ -1,6 +1,4 @@
-export default function init(container, domain) {
-  const prefix = `omora_${domain}_`;
-
+export default async function init(container) {
   // Background section
   const bgSection = document.createElement('div');
   bgSection.className = 'section';
@@ -21,7 +19,7 @@ export default function init(container, domain) {
     const lbl = document.createElement('label');
     const input = document.createElement('input');
     input.type = 'radio';
-    input.name = `${domain}-bg`;
+    input.name = 'chatgpt-bg';
     input.value = value;
     lbl.appendChild(input);
     lbl.appendChild(document.createTextNode(label));
@@ -58,12 +56,13 @@ export default function init(container, domain) {
     }
   };
 
-  const setBg = (type) => {
-    localStorage.setItem(`${prefix}bgType`, type);
+  const setBg = async (type) => {
+    await chrome.storage.local.set({ omoraBgType: type });
     if (type !== 'custom') {
-      localStorage.removeItem(`${prefix}bgImage`);
+      await chrome.storage.local.remove('omoraBgImage');
     }
-    applyBackground(type, localStorage.getItem(`${prefix}bgImage`));
+    const { omoraBgImage = '' } = await chrome.storage.local.get('omoraBgImage');
+    applyBackground(type, omoraBgImage);
     customBg.classList.toggle('hidden', type !== 'custom');
   };
 
@@ -72,26 +71,26 @@ export default function init(container, domain) {
   });
 
   fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0];
+    const file = fileInput.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      localStorage.setItem(`${prefix}bgImage`, dataUrl);
-      localStorage.setItem(`${prefix}bgType`, 'custom');
-      radioGroup.querySelector(`input[value="custom"]`).checked = true;
-      applyBackground('custom', dataUrl);
+    reader.onload = async () => {
+      await chrome.storage.local.set({ omoraBgImage: reader.result, omoraBgType: 'custom' });
+      radioGroup.querySelector('input[value="custom"]').checked = true;
+      applyBackground('custom', reader.result);
       customBg.classList.remove('hidden');
     };
     reader.readAsDataURL(file);
   });
 
-  const savedBgType = localStorage.getItem(`${prefix}bgType`) || 'default';
-  const savedBgImage = localStorage.getItem(`${prefix}bgImage`);
-  const initialRadio = radioGroup.querySelector(`input[value="${savedBgType}"]`);
+  const { omoraBgType = 'default', omoraBgImage = '' } = await chrome.storage.local.get([
+    'omoraBgType',
+    'omoraBgImage'
+  ]);
+  const initialRadio = radioGroup.querySelector(`input[value="${omoraBgType}"]`);
   if (initialRadio) initialRadio.checked = true;
-  applyBackground(savedBgType, savedBgImage);
-  customBg.classList.toggle('hidden', savedBgType !== 'custom');
+  applyBackground(omoraBgType, omoraBgImage);
+  customBg.classList.toggle('hidden', omoraBgType !== 'custom');
 
   // Chatbubble color section
   const colorSection = document.createElement('div');
@@ -108,13 +107,13 @@ export default function init(container, domain) {
   colorGrid.className = 'color-grid';
   colorSection.appendChild(colorGrid);
 
-  const colors = ['#ffffff', '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
+  const colors = ['#4CAF50', '#2196F3', '#FFC107', '#E91E63', '#9C27B0', '#FF5722', '#795548', '#607D8B'];
 
-  const setColor = (color) => {
-    localStorage.setItem(`${prefix}bubbleColor`, color);
+  const setColor = async (color) => {
+    await chrome.storage.local.set({ omoraBubbleColor: color });
     colorPreview.style.backgroundColor = color;
     Array.from(colorGrid.children).forEach((btn) => {
-      btn.classList.toggle('selected', btn.dataset.color === color);
+      btn.classList.toggle('active', btn.dataset.color === color);
     });
   };
 
@@ -127,8 +126,11 @@ export default function init(container, domain) {
     colorGrid.appendChild(btn);
   });
 
-  const savedColor = localStorage.getItem(`${prefix}bubbleColor`) || colors[0];
-  setColor(savedColor);
-
   container.appendChild(colorSection);
+
+  const { omoraBubbleColor = '' } = await chrome.storage.local.get('omoraBubbleColor');
+  if (omoraBubbleColor) {
+    await setColor(omoraBubbleColor);
+  }
 }
+

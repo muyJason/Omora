@@ -12,7 +12,12 @@
   "background": { "service_worker": "background.js" },
   "content_scripts": [
     { "matches": ["<all_urls>"], "js": ["sidebar.js"], "css": ["sidebar.css"], "run_at": "document_end" },
-    { "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*"], "js": ["appearanceInjector.js"], "run_at": "document_end" }
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "exclude_matches": ["https://chatgpt.com/codex*"],
+      "js": ["appearanceInjector.js"],
+      "run_at": "document_end"
+    }
   ],
   "action": {
     "default_icon": {
