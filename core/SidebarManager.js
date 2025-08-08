@@ -6,8 +6,8 @@ export class SidebarManager {
     this.panelWidth = isNaN(saved) ? 300 : saved
     this.container = document.createElement('div')
     this.container.id = 'omora-sidebar'
-    this.container.style.display = 'none'
     this.panel = document.createElement('div')
+    this.panel.id = 'sidebar-panel-container'
     this.panel.className = 'omora-panel'
     this.panel.style.width = '0px'
     this.resizeHandle = document.createElement('div')
@@ -28,24 +28,34 @@ export class SidebarManager {
     })
   }
   registerTool(tool) {
-    const btn = document.createElement('button')
-    btn.className = 'omora-btn'
-    btn.innerHTML = tool.icon
-    btn.title = tool.tooltip
-    btn.addEventListener('click', () => this.toggle(tool.id))
-    this.iconsTop.appendChild(btn)
-    this.tools.set(tool.id, { tool, button: btn })
+    const icon = document.createElement('button')
+    icon.className = 'omora-btn'
+    icon.innerHTML = tool.icon
+    icon.title = tool.tooltip
+    icon.addEventListener('click', () => this.toggleTool(tool.id))
+    this.iconsTop.appendChild(icon)
+    this.tools.set(tool.id, { tool, button: icon })
   }
-  toggle(id) {
+  toggleTool(id) {
     if (this.activeId === id) {
       this.closeActiveTool()
       return
     }
-    if (this.activeId) this.closeActiveTool()
     const entry = this.tools.get(id)
     if (!entry) return
+    if (this.activeId) this.closeActiveTool()
     this.activeId = id
     entry.button.classList.add('active')
+    let container = document.querySelector('#sidebar-panel-container')
+    if (!container) {
+      container = document.createElement('div')
+      container.id = 'sidebar-panel-container'
+      container.className = 'omora-panel'
+      container.style.width = '0px'
+      container.appendChild(this.resizeHandle)
+      this.container.insertBefore(container, this.container.firstChild)
+    }
+    this.panel = container
     this.panel.innerHTML = ''
     this.panel.appendChild(this.resizeHandle)
     entry.tool.execute(this.panel)

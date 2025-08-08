@@ -7,7 +7,7 @@ interface ToolEntry {
 
 export class SidebarManager {
   private tools: Map<string, ToolEntry> = new Map()
-  private container: HTMLElement
+  container: HTMLElement
   private panel: HTMLElement
   private iconsTop: HTMLElement
   private resizeHandle: HTMLElement
@@ -20,6 +20,7 @@ export class SidebarManager {
     this.container = document.createElement('div')
     this.container.id = 'omora-sidebar'
     this.panel = document.createElement('div')
+    this.panel.id = 'sidebar-panel-container'
     this.panel.className = 'omora-panel'
     this.panel.style.width = '0px'
     this.resizeHandle = document.createElement('div')
@@ -41,25 +42,35 @@ export class SidebarManager {
   }
 
   registerTool(tool: OmoraTool) {
-    const btn = document.createElement('button')
-    btn.className = 'omora-btn'
-    btn.innerHTML = tool.icon
-    btn.title = tool.tooltip
-    btn.addEventListener('click', () => this.toggle(tool.id))
-    this.iconsTop.appendChild(btn)
-    this.tools.set(tool.id, { tool, button: btn })
+    const icon = document.createElement('button')
+    icon.className = 'omora-btn'
+    icon.innerHTML = tool.icon
+    icon.title = tool.tooltip
+    icon.addEventListener('click', () => this.toggleTool(tool.id))
+    this.iconsTop.appendChild(icon)
+    this.tools.set(tool.id, { tool, button: icon })
   }
 
-  private toggle(id: string) {
+  private toggleTool(id: string) {
     if (this.activeId === id) {
       this.closeActiveTool()
       return
     }
-    if (this.activeId) this.closeActiveTool()
     const entry = this.tools.get(id)
     if (!entry) return
+    if (this.activeId) this.closeActiveTool()
     this.activeId = id
     entry.button.classList.add('active')
+    let container = document.querySelector('#sidebar-panel-container') as HTMLElement | null
+    if (!container) {
+      container = document.createElement('div')
+      container.id = 'sidebar-panel-container'
+      container.className = 'omora-panel'
+      container.style.width = '0px'
+      container.appendChild(this.resizeHandle)
+      this.container.insertBefore(container, this.container.firstChild)
+    }
+    this.panel = container
     this.panel.innerHTML = ''
     this.panel.appendChild(this.resizeHandle)
     entry.tool.execute(this.panel)
@@ -67,7 +78,7 @@ export class SidebarManager {
     this.panel.style.width = this.panelWidth + 'px'
   }
 
-  private closeActiveTool() {
+  closeActiveTool() {
     if (!this.activeId) return
     const entry = this.tools.get(this.activeId)
     if (entry) {
