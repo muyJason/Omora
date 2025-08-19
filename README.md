@@ -7,3 +7,7 @@ The side panel UI is written in TypeScript. It presents a fixed rail on the righ
 
 ## Styling
 Core styles provide a dark theme with system UI fonts, an icon rail, and a collapsible panel. Components animate with 180ms transitions and include focus rings for accessibility.
+
+## Rail Icons
+The rail now uses semantic toolbar and button elements. Each icon button exposes a native tooltip and ARIA label, and the active
+icon is highlighted with a subtle accent background and left border glow.
