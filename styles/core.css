@@ -31,17 +31,32 @@
   height: 24px;
 }
 
-.om-panel {
+.om-shell {
   position: fixed;
   right: 30px;
   top: 0;
   bottom: 0;
   width: 320px;
+  display: flex;
+  flex-direction: column;
   background-color: var(--om-color-bg);
   border-left: 1px solid var(--om-color-accent);
-  overflow: hidden;
   z-index: 999;
   transition: transform 0.18s ease;
+}
+
+.om-header {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--om-space-2);
+  border-bottom: 1px solid var(--om-color-accent);
+}
+
+.om-panel {
+  flex: 1;
+  overflow: hidden;
 }
 
 .om-iframe {
