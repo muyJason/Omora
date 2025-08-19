@@ -1,4 +1,6 @@
-export function initRail(container, features) {
+import type { Feature } from './app.js'
+
+export function initRail(container: HTMLDivElement, features: Feature[]) {
   features.forEach(feature => {
     const button = document.createElement('button')
     button.className = 'om-rail__icon'

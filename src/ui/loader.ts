@@ -1,6 +1,7 @@
 import { createSandboxedIframe } from '../core/sandbox.js'
+import type { Feature } from './app.js'
 
-export function loadFeature(panel, feature) {
+export function loadFeature(panel: HTMLDivElement, feature: Feature) {
   panel.innerHTML = ''
   const url = chrome.runtime.getURL(`src/features/${feature.id}/${feature.entry.html}`)
   const iframe = createSandboxedIframe(url)
