@@ -1,14 +1,12 @@
-
-
-export function getState<T>(key: string): Promise<T | null> {
+export function getState(key) {
   return new Promise((resolve) => {
     chrome.storage.local.get(key, (items) => {
-      resolve((items as any)[key] ?? null);
+      resolve(items[key] ?? null);
     });
   });
 }
 
-export function setState(key: string, value: any): Promise<void> {
+export function setState(key, value) {
   return new Promise((resolve) => {
     chrome.storage.local.set({ [key]: value }, () => {
       resolve();

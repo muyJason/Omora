@@ -1,4 +1,4 @@
-export function createSandboxedIframe(src: string): HTMLIFrameElement {
+export function createSandboxedIframe(src) {
   const iframe = document.createElement('iframe');
   iframe.setAttribute('sandbox', 'allow-scripts');
   iframe.className = 'om-iframe';
