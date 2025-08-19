@@ -1,5 +1,4 @@
-import { FeatureMeta } from '../core/types';
-export function initRail(features: FeatureMeta[]): HTMLElement {
+export function initRail(features) {
   const rail = document.createElement('div');
   rail.className = 'om-rail';
   features.forEach((feature) => {
