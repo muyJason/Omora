@@ -10,7 +10,7 @@ The side panel UI is written in TypeScript. It presents a fixed rail on the righ
 - **Ctrl+Alt+DigitN** focuses and activates the Nth feature in the rail.
 
 ## Styling
-Core styles provide a dark theme with system UI fonts, an icon rail, and a collapsible panel. Components animate with 180ms transitions and include focus rings for accessibility.
+Core styles provide a dark theme with system UI fonts, an icon rail, and a collapsible panel. Components animate with 180ms transitions and include focus rings for accessibility. Feature iframes mount inside a padded `.om-panel__host` so content doesn't touch the panel edges.
 
 ## Rail Icons
 The rail now uses semantic toolbar and button elements. Each icon button exposes a native tooltip and ARIA label, and the active
