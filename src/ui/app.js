@@ -1,6 +1,7 @@
 import { loadRegistry } from '../core/registry.js'
 import { initRail } from './rail.js'
 import { loadFeature } from './loader.js'
+import { buildHeader, setTitle } from './header.js'
 
 const STATE_KEY = 'omora:ui:state'
 
@@ -16,18 +17,19 @@ async function init() {
   const rail = document.querySelector('.om-rail')
   const shell = document.querySelector('.om-shell')
   const panel = document.querySelector('.om-panel')
-  const title = document.getElementById('om-title')
-  const close = document.getElementById('om-close')
+  const header = buildHeader()
+  shell.insertBefore(header, panel)
+  const close = header.querySelector('#om-close')
   const collapse = () => {
-    shell.style.display = 'none'
-    title.textContent = ''
-    const active = rail.querySelector('.om-rail__icon--active')
-    if (active) active.classList.remove('om-rail__icon--active')
+    document.body.classList.add('om-collapsed')
     setState(true)
   }
   const expand = () => {
-    shell.style.display = ''
+    document.body.classList.remove('om-collapsed')
     setState(false)
+  }
+  const toggle = () => {
+    document.body.classList.contains('om-collapsed') ? expand() : collapse()
   }
   const features = await loadRegistry()
   initRail(rail, features)
@@ -38,7 +40,24 @@ async function init() {
   })
   close.addEventListener('click', () => collapse())
   document.addEventListener('omora:feature-activated', e => {
-    title.textContent = e.detail.name ?? ''
+    setTitle(e.detail.name ?? '')
+  })
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.shiftKey && e.code === 'KeyO') {
+      e.preventDefault()
+      toggle()
+    } else if (e.ctrlKey && e.altKey && e.code.startsWith('Digit')) {
+      const index = parseInt(e.code.slice(5), 10) - 1
+      if (index >= 0) {
+        const buttons = Array.from(rail.querySelectorAll('.om-rail__icon'))
+        const btn = buttons[index]
+        if (btn) {
+          e.preventDefault()
+          btn.focus()
+          btn.click()
+        }
+      }
+    }
   })
   const state = await getState()
   state?.collapsed ? collapse() : expand()
