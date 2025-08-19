@@ -35,7 +35,7 @@ body {
   background: transparent;
   border-radius: var(--om-radius-m, 8px);
   cursor: pointer;
-  transition: background 0.18s ease, filter 0.18s ease;
+  transition: background 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
 .om-rail__icon:hover {
@@ -67,6 +67,16 @@ body {
 .om-rail__icon:active img,
 .om-rail__icon:active svg {
   filter: brightness(0.8);
+}
+
+.om-rail__icon.is-active {
+  background: rgba(59, 130, 246, 0.15);
+  box-shadow: inset 2px 0 0 var(--om-color-accent, #3b82f6);
+}
+
+.om-rail__icon.is-active img,
+.om-rail__icon.is-active svg {
+  filter: brightness(1.2);
 }
 
 .om-shell {
