@@ -1,0 +1,10 @@
+{
+  "om": {
+    "ui": {
+      "toggle": "Seitenleiste umschalten"
+    },
+    "tooltip": {
+      "colorpicker": "Farben auswählen"
+    }
+  }
+}

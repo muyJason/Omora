@@ -1,0 +1,10 @@
+{
+  "om": {
+    "ui": {
+      "toggle": "Toggle Sidebar"
+    },
+    "tooltip": {
+      "colorpicker": "Pick colors"
+    }
+  }
+}

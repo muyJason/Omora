@@ -1,31 +1,19 @@
 {
-  "manifest_version": 3,
   "name": "Omora",
-  "version": "1.0",
-  "description": "Base Chrome extension for Omora",
-  "icons": {
-    "16": "public/icon16.png",
-    "32": "public/icon32.png",
-    "128": "public/icon128.png"
+  "description": "Omora Chrome Extension",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "permissions": ["sidePanel", "storage", "scripting", "activeTab"],
+  "background": {
+    "service_worker": "src/background/index.js"
   },
-  "permissions": ["storage", "tabs"],
-  "background": { "service_worker": "background.js" },
-  "content_scripts": [
-    { "matches": ["<all_urls>"], "js": ["sidebar.js"], "css": ["sidebar.css"], "run_at": "document_end" },
-    { "matches": ["https://chatgpt.com/*"], "js": ["buttons/website-specific/chatgpt.js"], "run_at": "document_end" }
-  ],
+  "side_panel": {
+    "default_path": "src/ui/index.html"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["core/*.js", "tools/**/*.js", "tools/**/*.css"],
+      "resources": ["src/features/*/*.html", "src/features/*/*.js", "src/features/*/*.png", "src/features/*/*.json"],
       "matches": ["<all_urls>"]
     }
-  ],
-  "action": {
-    "default_icon": {
-      "16": "public/icon16.png",
-      "32": "public/icon32.png",
-      "128": "public/icon128.png"
-    },
-    "default_title": "Omora"
-  }
+  ]
 }

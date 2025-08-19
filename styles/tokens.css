@@ -1,0 +1,25 @@
+
+
+:root {
+  --om-color-bg: #ffffff;
+  --om-color-fg: #1a1a1a;
+  --om-color-accent: #3b82f6;
+  --om-space-1: 0.25rem;
+  --om-space-2: 0.5rem;
+  --om-space-3: 0.75rem;
+  --om-space-4: 1rem;
+  --om-space-5: 1.25rem;
+  --om-space-6: 1.5rem;
+  --om-radius-s: 4px;
+  --om-radius-m: 8px;
+  --om-radius-l: 16px;
+  --om-font-ui: system-ui, sans-serif;
+  --om-font-mono: ui-monospace, monospace;
+  --om-font-size-base: 14px;
+}
+
+[data-theme="dark"] {
+  --om-color-bg: #111827;
+  --om-color-fg: #f9fafb;
+  --om-color-accent: #3b82f6;
+}
