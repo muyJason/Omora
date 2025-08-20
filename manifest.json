@@ -3,13 +3,22 @@
   "description": "Omora Chrome Extension",
   "version": "0.1.0",
   "manifest_version": 3,
-  "permissions": ["sidePanel", "storage", "scripting", "activeTab"],
+  "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
   "background": {
-    "service_worker": "src/background/index.js"
+    "service_worker": "background.js"
   },
   "side_panel": {
-    "default_path": "src/ui/index.html"
+    "default_path": "sidepanel.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {},
   "web_accessible_resources": [
     {
       "resources": ["src/features/*/*.html", "src/features/*/*.js", "src/features/*/*.png", "src/features/*/*.json"],
