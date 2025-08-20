@@ -2,6 +2,9 @@
 
 Omora Chrome extension.
 
+## ISidebar
+Each page displays a draggable rail on the right edge with buttons for Notes and Color Picker. The rail appears only in browsers that support the side panel API. Choosing a button opens the Omora side panel for that feature.
+
 ## Development
 The side panel UI is written in TypeScript. It presents a fixed rail on the right and a content shell on the left. A dynamic header is created in code with an `#om-title` span and `#om-close` button. Clicking close collapses the shell to leave only the rail visible and the collapsed state persists in `chrome.storage.local`.
 
@@ -16,6 +19,9 @@ Core styles provide a dark theme with system UI fonts, an icon rail, and a colla
 ## Rail Icons
 The rail now uses semantic toolbar and button elements. Each icon button exposes a native tooltip and ARIA label, and the active
 icon is highlighted with a subtle accent background and left border glow.
+
+## Notes
+A quick scratchpad for jotting down thoughts while browsing.
 
 ## Color Picker
 A dark themed color picker offers a saturation/value canvas, hue and alpha sliders, HEX and RGBA inputs, a preview swatch, and copyable RGBA, HEX, HSV, and CMYK values. The pipette button uses the EyeDropper API when available.
