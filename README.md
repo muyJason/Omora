@@ -16,3 +16,6 @@ Core styles provide a dark theme with system UI fonts, an icon rail, and a colla
 ## Rail Icons
 The rail now uses semantic toolbar and button elements. Each icon button exposes a native tooltip and ARIA label, and the active
 icon is highlighted with a subtle accent background and left border glow.
+
+## Color Picker
+A dark themed color picker offers a saturation/value canvas, hue and alpha sliders, HEX and RGBA inputs, a preview swatch, and copyable RGBA, HEX, HSV, and CMYK values. The pipette button uses the EyeDropper API when available.

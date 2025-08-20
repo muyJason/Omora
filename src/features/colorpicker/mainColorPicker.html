@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Color Picker</title>
-  </head>
-  <body>
-    <div id="color-picker">Color picker feature</div>
-    <script type="module" src="./mainColorPicker.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<title>Color Picker</title>
+<style>
+:root{--cp-bg:#1a1a1a;--cp-fg:#f5f5f5;--cp-border:#333;--cp-radius:4px;--cp-accent:#676cba;--cp-transition:.18s;--cp-check:#666;--cp-check2:#777}
+html,body{margin:0;height:100%;background:var(--cp-bg);color:var(--cp-fg);font:13px/1.4 system-ui}
+.cp-root{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"canvas canvas""tools tools""hex hex""rgb rgb""swatch out";gap:8px;padding:8px}
+.cp-canvaswrap{grid-area:canvas;position:relative;width:300px;aspect-ratio:16/13}
+#cp-canvas{width:100%;height:100%;border-radius:var(--cp-radius);cursor:crosshair}
+.cp-tools{grid-area:tools;display:flex;align-items:center;gap:8px}
+button,input{background:#2a2a2a;color:var(--cp-fg);border:1px solid var(--cp-border);border-radius:var(--cp-radius);padding:4px;transition:var(--cp-transition)}
+button:hover,input:hover{border-color:var(--cp-accent)}
+button:active{background:#3a3a3a}
+button:focus-visible,input:focus-visible{outline:2px solid var(--cp-accent);outline-offset:2px}
+#cp-pipette{display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0}
+#cp-hue,#cp-alpha{flex:1;height:8px;padding:0}
+#cp-hue::-webkit-slider-thumb,#cp-alpha::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:var(--cp-fg);border:1px solid var(--cp-border)}
+#cp-hue{background:linear-gradient(90deg,red,#ff0,#0f0,#0ff,#00f,#f0f,red);border:none}
+#cp-alpha{background-image:linear-gradient(90deg,rgba(103,108,186,0),rgba(103,108,186,1)),repeating-conic-gradient(var(--cp-check) 0% 25%,var(--cp-check2) 0% 50%);background-size:100% 100%,8px 8px;border:none}
+.cp-hexrow{grid-area:hex;display:flex;align-items:center;gap:8px}
+.cp-hexrow label{width:32px}
+.cp-rgbrow{grid-area:rgb;display:flex;gap:8px}
+.cp-rgbrow input{width:0;flex:1}
+.cp-out{grid-area:out;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px}
+.cp-out li{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.cp-out span{font-family:monospace}
+.cp-copy{width:24px;height:24px;display:flex;align-items:center;justify-content:center;padding:0}
+.cp-swatch{grid-area:swatch;width:96px;height:96px;border-radius:var(--cp-radius);border:1px solid var(--cp-border);background:#676cba}
+</style>
+</head>
+<body>
+<div class="cp-root">
+<div class="cp-canvaswrap"><canvas id="cp-canvas"></canvas></div>
+<div class="cp-tools">
+<button id="cp-pipette" aria-label="Pick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22l1-1 8-8"/><path d="M4 20l-2 2"/><path d="M15 3l6 6-11 11H4v-6z"/></svg></button>
+<input id="cp-hue" type="range" min="0" max="360" value="0">
+<input id="cp-alpha" type="range" min="0" max="100" value="100">
+</div>
+<div class="cp-hexrow"><label for="cp-hex">HEX</label><input id="cp-hex" maxlength="7"></div>
+<div class="cp-rgbrow"><input id="cp-r" type="number" min="0" max="255"><input id="cp-g" type="number" min="0" max="255"><input id="cp-b" type="number" min="0" max="255"><input id="cp-a" type="number" min="0" max="100"></div>
+<ul class="cp-out">
+<li><span class="cp-out-rgba"></span><button class="cp-copy" data-copy="rgba"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></li>
+<li><span class="cp-out-hex"></span><button class="cp-copy" data-copy="hex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></li>
+<li><span class="cp-out-hsv"></span><button class="cp-copy" data-copy="hsv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></li>
+<li><span class="cp-out-cmyk"></span><button class="cp-copy" data-copy="cmyk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></li>
+</ul>
+<div class="cp-swatch"></div>
+</div>
+<script type="module" src="./mainColorPicker.js"></script>
+</body>
 </html>
