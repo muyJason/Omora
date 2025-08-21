@@ -3,7 +3,7 @@
   "description": "Omora Chrome Extension",
   "version": "0.1.0",
   "manifest_version": 3,
-  "permissions": ["sidePanel", "activeTab", "scripting", "storage"],
+  "permissions": ["sidePanel", "activeTab", "scripting", "storage","tabs"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
@@ -15,7 +15,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["contentScript.js"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
   "action": {},

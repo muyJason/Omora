@@ -1,11 +1,13 @@
 export async function loadRegistry() {
-  const metas = [];
-  try {
-    const url = chrome.runtime.getURL('src/features/colorpicker/metadata.json');
-    const res = await fetch(url);
-    const meta = await res.json();
-    metas.push(meta);
-  } catch (_e) {
+  const features = ['colorpicker', 'notes']
+  const metas = []
+  for (const f of features) {
+    try {
+      const url = chrome.runtime.getURL(`src/features/${f}/metadata.json`)
+      const res = await fetch(url)
+      if (!res.ok) continue
+      metas.push(await res.json())
+    } catch (_) {}
   }
-  return metas;
+  return metas
 }

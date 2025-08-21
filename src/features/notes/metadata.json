@@ -1,0 +1,13 @@
+{
+  "id": "notes",
+  "name": "Notes",
+  "tooltip": "Write quick notes",
+  "icon": "icon.png",
+  "entry": {
+    "script": "mainNotes.js",
+    "html": "mainNotes.html"
+  },
+  "capabilities": ["store-text"],
+  "version": "1.0.0",
+  "minOmora": "1.0.0"
+}
